@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio Version 18
+
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sax-harmonizer - App", "sax-harmonizer_App.vcxproj", "{942FD2AD-B05E-54FF-D78B-E6404B44034E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{942FD2AD-B05E-54FF-D78B-E6404B44034E}.Debug|x64.ActiveCfg = Debug|x64
+		{942FD2AD-B05E-54FF-D78B-E6404B44034E}.Debug|x64.Build.0 = Debug|x64
+		{942FD2AD-B05E-54FF-D78B-E6404B44034E}.Release|x64.ActiveCfg = Release|x64
+		{942FD2AD-B05E-54FF-D78B-E6404B44034E}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
