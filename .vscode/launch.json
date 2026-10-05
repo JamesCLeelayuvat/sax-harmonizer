@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug sax-harmonizer",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Builds/VisualStudio2026/x64/Debug/App/NewProject.exe",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Build (Debug)",
+            "console": "internalConsole"
+        }
+    ]
+}

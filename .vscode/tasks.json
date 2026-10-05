@@ -1,0 +1,38 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build (Debug)",
+            "type": "process",
+            "command": "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe",
+            "args": [
+                "${workspaceFolder}/Builds/VisualStudio2026/sax-harmonizer.sln",
+                "-p:Configuration=Debug",
+                "-p:Platform=x64",
+                // Projucer targets VS 2026 (v145); only VS 2022 Build Tools (v143) are installed
+                "-p:PlatformToolset=v143",
+                "-m",
+                "-nologo",
+                "-v:minimal"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": { "kind": "build", "isDefault": true }
+        },
+        {
+            "label": "Build (Release)",
+            "type": "process",
+            "command": "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe",
+            "args": [
+                "${workspaceFolder}/Builds/VisualStudio2026/sax-harmonizer.sln",
+                "-p:Configuration=Release",
+                "-p:Platform=x64",
+                "-p:PlatformToolset=v143",
+                "-m",
+                "-nologo",
+                "-v:minimal"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        }
+    ]
+}

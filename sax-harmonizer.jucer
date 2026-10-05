@@ -8,6 +8,30 @@
       <FILE id="zn2soX" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="ydo4ah" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
+      <GROUP id="{3B7E1F42-9A6D-4C2E-8F51-D0A7B3C9E214}" name="DSP">
+        <FILE id="eQ4hZr" name="HarmonizerEngine.h" compile="0" resource="0"
+              file="Source/DSP/HarmonizerEngine.h"/>
+        <FILE id="Jc7vNk" name="HarmonizerEngine.cpp" compile="1" resource="0"
+              file="Source/DSP/HarmonizerEngine.cpp"/>
+        <FILE id="hV3kQp" name="HarmonyVoice.h" compile="0" resource="0" file="Source/DSP/HarmonyVoice.h"/>
+        <FILE id="Tn8wLc" name="HarmonyVoice.cpp" compile="1" resource="0"
+              file="Source/DSP/HarmonyVoice.cpp"/>
+        <FILE id="pD2rXm" name="PitchDetector.h" compile="0" resource="0" file="Source/DSP/PitchDetector.h"/>
+        <FILE id="Gy6sBv" name="PitchDetector.cpp" compile="1" resource="0"
+              file="Source/DSP/PitchDetector.cpp"/>
+        <FILE id="kS9fJt" name="PitchShifter.h" compile="0" resource="0" file="Source/DSP/PitchShifter.h"/>
+        <FILE id="Wq4zNe" name="PitchShifter.cpp" compile="1" resource="0"
+              file="Source/DSP/PitchShifter.cpp"/>
+      </GROUP>
+      <GROUP id="{8C1D5E07-2F4B-4A93-B6E8-71F0C2D4A5B9}" name="Midi">
+        <FILE id="mR7cYh" name="IntervalController.h" compile="0" resource="0"
+              file="Source/Midi/IntervalController.h"/>
+        <FILE id="Lx5gUa" name="IntervalController.cpp" compile="1" resource="0"
+              file="Source/Midi/IntervalController.cpp"/>
+      </GROUP>
+      <GROUP id="{E4A9C6B2-7D18-4F05-9C3A-5B2E8D1F7A60}" name="Utils">
+        <FILE id="bF1nWs" name="RingBuffer.h" compile="0" resource="0" file="Source/Utils/RingBuffer.h"/>
+      </GROUP>
     </GROUP>
   </MAINGROUP>
   <MODULES>
@@ -20,6 +44,7 @@
     <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
@@ -29,8 +54,8 @@
   <EXPORTFORMATS>
     <VS2026 targetFolder="Builds/VisualStudio2026">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="NewProject"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="NewProject"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="NewProject" headerPath="../../ThirdParty/signalsmith-stretch/include&#10;../../ThirdParty/signalsmith-linear/include"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="NewProject" headerPath="../../ThirdParty/signalsmith-stretch/include&#10;../../ThirdParty/signalsmith-linear/include"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../../../../../../Program Files/JUCE/modules"/>
@@ -45,6 +70,7 @@
         <MODULEPATH id="juce_gui_basics" path="../../../../../../../Program Files/JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="../../../../../../../Program Files/JUCE/modules"/>
         <MODULEPATH id="juce_audio_processors_headless" path="../../../../../../../Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_dsp" path="../../../../../../Program Files/JUCE/modules"/>
       </MODULEPATHS>
     </VS2026>
   </EXPORTFORMATS>

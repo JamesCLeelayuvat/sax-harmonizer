@@ -1,0 +1,26 @@
+# Build output
+Builds/**/x64/
+Builds/**/Win32/
+Builds/**/.vs/
+Tests/Builds/**/x64/
+Tests/Builds/**/.vs/
+.vs/
+
+# Visual Studio user files
+*.user
+*.suo
+*.VC.db
+*.VC.opendb
+*.aps
+
+# macOS / Xcode
+.DS_Store
+Builds/MacOSX/build/
+xcuserdata/
+
+# VS Code — keep shared build/debug config, ignore the rest
+.vscode/*
+!.vscode/c_cpp_properties.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.cache/
