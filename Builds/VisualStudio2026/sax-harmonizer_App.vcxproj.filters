@@ -4140,6 +4140,9 @@
     <ClInclude Include="..\..\Source\DSP\HarmonyVoice.h">
       <Filter>sax-harmonizer\Source\DSP</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\DSP\DspConfig.h">
+      <Filter>sax-harmonizer\Source\DSP</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\DSP\PitchDetector.h">
       <Filter>sax-harmonizer\Source\DSP</Filter>
     </ClInclude>

@@ -8,6 +8,7 @@
             file="PitchDetectorTests.cpp"/>
     </GROUP>
     <GROUP id="{9B2E4D3F-5C8A-4F2A-8B1D-3E6F9A2C4D58}" name="DSP">
+      <FILE id="Tf4Dcf" name="DspConfig.h" compile="0" resource="0" file="../Source/DSP/DspConfig.h"/>
       <FILE id="Tf2Pdh" name="PitchDetector.h" compile="0" resource="0" file="../Source/DSP/PitchDetector.h"/>
       <FILE id="Tf3Pdc" name="PitchDetector.cpp" compile="1" resource="0"
             file="../Source/DSP/PitchDetector.cpp"/>

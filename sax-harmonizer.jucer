@@ -16,6 +16,7 @@
         <FILE id="hV3kQp" name="HarmonyVoice.h" compile="0" resource="0" file="Source/DSP/HarmonyVoice.h"/>
         <FILE id="Tn8wLc" name="HarmonyVoice.cpp" compile="1" resource="0"
               file="Source/DSP/HarmonyVoice.cpp"/>
+        <FILE id="Dc5fGz" name="DspConfig.h" compile="0" resource="0" file="Source/DSP/DspConfig.h"/>
         <FILE id="pD2rXm" name="PitchDetector.h" compile="0" resource="0" file="Source/DSP/PitchDetector.h"/>
         <FILE id="Gy6sBv" name="PitchDetector.cpp" compile="1" resource="0"
               file="Source/DSP/PitchDetector.cpp"/>

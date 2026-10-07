@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include "../Utils/RingBuffer.h"
+#include "DspConfig.h"
 
 //==============================================================================
 /*
@@ -19,11 +20,10 @@ public:
     void detectPitch();
 
 private:
-    RingBuffer history;
     double currSampleRate;
     int currNumChannels;
-    static constexpr auto fftOrder = 10;           // [1]
-    static constexpr auto fftSize = 1 << fftOrder; // [2]
+    static constexpr auto fftOrder = DspConfig::fftOrder; // [1]
+    static constexpr auto fftSize = DspConfig::fftSize;   // [2]
     juce::dsp::FFT forwardFFT{fftOrder};           // [3]
     std::array<float, fftSize> fifo;               // [4]
     std::array<float, fftSize * 2> fftData;        // [5]

@@ -3204,6 +3204,7 @@
     <ClInclude Include="..\..\Source\MainComponent.h"/>
     <ClInclude Include="..\..\Source\DSP\HarmonizerEngine.h"/>
     <ClInclude Include="..\..\Source\DSP\HarmonyVoice.h"/>
+    <ClInclude Include="..\..\Source\DSP\DspConfig.h"/>
     <ClInclude Include="..\..\Source\DSP\PitchDetector.h"/>
     <ClInclude Include="..\..\Source\DSP\PitchShifter.h"/>
     <ClInclude Include="..\..\Source\Midi\IntervalController.h"/>

@@ -1113,6 +1113,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Source\DSP\DspConfig.h">
+      <Filter>PitchDetectorTests\DSP</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\Source\DSP\PitchDetector.h">
       <Filter>PitchDetectorTests\DSP</Filter>
     </ClInclude>

@@ -10,7 +10,7 @@
 namespace
 {
     constexpr double testSampleRate = 48000.0;
-    constexpr int testFftSize = 1024; // must match PitchDetector::fftSize
+    constexpr int testFftSize = DspConfig::fftSize;
 
     // A naive FFT peak-picker can only be as accurate as one bin
     constexpr double testTolerance = testSampleRate / testFftSize;

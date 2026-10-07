@@ -1012,6 +1012,7 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_dsp.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Source\DSP\DspConfig.h"/>
     <ClInclude Include="..\..\..\Source\DSP\PitchDetector.h"/>
     <ClInclude Include="..\..\..\..\..\..\..\..\..\Program Files\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h"/>
     <ClInclude Include="..\..\..\..\..\..\..\..\..\Program Files\JUCE\modules\juce_audio_basics\buffers\juce_AudioChannelSet.h"/>

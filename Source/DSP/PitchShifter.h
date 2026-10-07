@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include <signalsmith-stretch/signalsmith-stretch.h>
+#include "DspConfig.h"
 
 //==============================================================================
 /*
@@ -20,8 +21,8 @@ private:
     signalsmith::stretch::SignalsmithStretch<float> stretch;
     double currSampleRate;
     int currNumChannels;
-    static constexpr auto fftOrder = 10;           // [1]
-    static constexpr auto fftSize = 1 << fftOrder; // [2]
+    static constexpr auto fftOrder = DspConfig::fftOrder; // [1]
+    static constexpr auto fftSize = DspConfig::fftSize;   // [2]
     std::array<float, fftSize> fifo;               // [4]
     std::array<float, fftSize * 2> fftData;        // [5]
 
