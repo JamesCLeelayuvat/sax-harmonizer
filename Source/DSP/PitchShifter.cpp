@@ -18,5 +18,5 @@ void PitchShifter::setSemitones(float semitones)
 
 void PitchShifter::process(const juce::AudioBuffer<float> &input, juce::AudioBuffer<float> &output, int numSamples)
 {
-   
 }
+
