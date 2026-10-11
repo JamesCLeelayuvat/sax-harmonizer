@@ -32,6 +32,9 @@
       </GROUP>
       <GROUP id="{E4A9C6B2-7D18-4F05-9C3A-5B2E8D1F7A60}" name="Utils">
         <FILE id="bF1nWs" name="RingBuffer.h" compile="0" resource="0" file="Source/Utils/RingBuffer.h"/>
+        <FILE id="tU7rQh" name="TuningUtils.h" compile="0" resource="0" file="Source/Utils/TuningUtils.h"/>
+        <FILE id="Kp3xVm" name="TuningUtils.cpp" compile="1" resource="0"
+              file="Source/Utils/TuningUtils.cpp"/>
       </GROUP>
     </GROUP>
   </MAINGROUP>

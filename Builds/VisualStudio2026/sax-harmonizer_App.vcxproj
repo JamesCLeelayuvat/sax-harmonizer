@@ -153,6 +153,7 @@
     <ClCompile Include="..\..\Source\DSP\PitchDetector.cpp"/>
     <ClCompile Include="..\..\Source\DSP\PitchShifter.cpp"/>
     <ClCompile Include="..\..\Source\Midi\IntervalController.cpp"/>
+    <ClCompile Include="..\..\Source\Utils\TuningUtils.cpp"/>
     <ClCompile Include="..\..\..\..\..\..\..\..\Program Files\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -3209,6 +3210,7 @@
     <ClInclude Include="..\..\Source\DSP\PitchShifter.h"/>
     <ClInclude Include="..\..\Source\Midi\IntervalController.h"/>
     <ClInclude Include="..\..\Source\Utils\RingBuffer.h"/>
+    <ClInclude Include="..\..\Source\Utils\TuningUtils.h"/>
     <ClInclude Include="..\..\..\..\..\..\..\..\Program Files\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h"/>
     <ClInclude Include="..\..\..\..\..\..\..\..\Program Files\JUCE\modules\juce_audio_basics\buffers\juce_AudioChannelSet.h"/>
     <ClInclude Include="..\..\..\..\..\..\..\..\Program Files\JUCE\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h"/>

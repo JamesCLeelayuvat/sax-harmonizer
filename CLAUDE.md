@@ -53,6 +53,8 @@ MainComponent (juce::AudioAppComponent, 2 in / 2 out)
 
 - `MainComponent` only forwards `prepareToPlay` / `getNextAudioBlock` / `releaseResources` to `HarmonizerEngine`. Keep the DSP out of the GUI class.
 - `process()` works in place on the device buffer, using `startSample`/`numSamples` from the `AudioSourceChannelInfo`.
+- `Source/DSP/DspConfig.h` holds shared DSP constants (`DspConfig::fftOrder` / `fftSize`). `PitchDetector`, `PitchShifter` and the tests all read the FFT size from there, so don't hard-code it anywhere else.
+- `Source/Utils/TuningUtils` has the 12-TET ratio lookup (`getEqualTemperedRatio(pitchClass)` gives 2^(pc/12) relative to the root).
 - Code in `prepare`/`process` runs on the audio thread. Do allocation (stretch configuration, buffer sizing) in `prepare`, not in `process`.
 
 ## Third-party

@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <algorithm> 
+#include <algorithm>
 //==============================================================================
 /*
     Fixed-size circular buffer of floats (holds recent input for pitch analysis).
@@ -16,7 +16,8 @@ public:
         buffer = std::vector<float>(a + 1);
         size = a + 1;
         start = 0;
-        end = 0;
+        end = a;
+        std::fill(buffer.begin(), buffer.end(), 0);
     }
 
     void clear()
@@ -24,39 +25,29 @@ public:
         buffer.clear();
         buffer.resize(size);
         start = 0;
-        end = 0;
+        end = size;
     }
 
     void push(float data)
     {
 
-        if (full())
-        {
-            end++;
-            end = end % size;
-            buffer[end] = data;
-            start++;
-            start = start % size;
-        }
-        else
-        {
-            end++;
-            buffer[end] = data;
-        }
+        end++;
+        end = end % size;
+        buffer[end] = data;
+        start++;
+        start = start % size;
     }
 
-    std::size_t readAll(std::vector<float>& dest) const
+    std::size_t readAll(std::vector<float> &dest) const
     {
         std::size_t n = std::min<std::size_t>(getSize(), dest.size());
-        for(int i = start + 1, j = 0; j < n; i++, j++){
+        for (std::size_t i = start + 1, j = 0; j < n; i++, j++)
+        {
             dest[j] = buffer[i % size];
         }
 
         return n;
     }
-
-    
-    // TODO: setSize(), clear(), push(), read/copy out
 
 private:
     std::size_t size;
@@ -64,21 +55,14 @@ private:
     int start;
     int end;
 
-    bool full() const
+    std::size_t getSize() const
     {
-        return (end + 1) % size == start;
-    }
-
-    bool empty() const
-    {
-        return start == end;
-    }
-
-    std::size_t getSize() const{
-        if(end >= start){
+        if (end >= start)
+        {
             return end - start;
         }
-        else{
+        else
+        {
             return size - (start - end);
         }
     }

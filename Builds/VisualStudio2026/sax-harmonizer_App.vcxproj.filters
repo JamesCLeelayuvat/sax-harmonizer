@@ -880,6 +880,9 @@
     <ClCompile Include="..\..\Source\Midi\IntervalController.cpp">
       <Filter>sax-harmonizer\Source\Midi</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Utils\TuningUtils.cpp">
+      <Filter>sax-harmonizer\Source\Utils</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\Program Files\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.cpp">
       <Filter>JUCE Modules\juce_audio_basics\audio_play_head</Filter>
     </ClCompile>
@@ -4153,6 +4156,9 @@
       <Filter>sax-harmonizer\Source\Midi</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Utils\RingBuffer.h">
+      <Filter>sax-harmonizer\Source\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Utils\TuningUtils.h">
       <Filter>sax-harmonizer\Source\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\Program Files\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h">
