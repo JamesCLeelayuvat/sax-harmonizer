@@ -5,6 +5,9 @@
     <Filter Include="sax-harmonizer\Source\DSP">
       <UniqueIdentifier>{7AC1DDC7-5F67-52A1-7FCE-D3497D372E1E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sax-harmonizer\Source\GUI">
+      <UniqueIdentifier>{F676CD3F-26E1-2C5D-E5FE-FBA95B585AEB}</UniqueIdentifier>
+    </Filter>
     <Filter Include="sax-harmonizer\Source\Midi">
       <UniqueIdentifier>{761198C9-1347-1CBA-65F8-1229E047D2FB}</UniqueIdentifier>
     </Filter>
@@ -877,7 +880,10 @@
     <ClCompile Include="..\..\Source\DSP\PitchShifter.cpp">
       <Filter>sax-harmonizer\Source\DSP</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Midi\IntervalController.cpp">
+    <ClCompile Include="..\..\Source\GUI\NoteKeyboard.cpp">
+      <Filter>sax-harmonizer\Source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Midi\NoteController.cpp">
       <Filter>sax-harmonizer\Source\Midi</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Utils\TuningUtils.cpp">
@@ -4143,6 +4149,9 @@
     <ClInclude Include="..\..\Source\DSP\HarmonyVoice.h">
       <Filter>sax-harmonizer\Source\DSP</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\DSP\HarmonizerParameters.h">
+      <Filter>sax-harmonizer\Source\DSP</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\DSP\DspConfig.h">
       <Filter>sax-harmonizer\Source\DSP</Filter>
     </ClInclude>
@@ -4152,7 +4161,13 @@
     <ClInclude Include="..\..\Source\DSP\PitchShifter.h">
       <Filter>sax-harmonizer\Source\DSP</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Midi\IntervalController.h">
+    <ClInclude Include="..\..\Source\GUI\NoteKeyboard.h">
+      <Filter>sax-harmonizer\Source\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\GUI\LevelMeter.h">
+      <Filter>sax-harmonizer\Source\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Midi\NoteController.h">
       <Filter>sax-harmonizer\Source\Midi</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Utils\RingBuffer.h">

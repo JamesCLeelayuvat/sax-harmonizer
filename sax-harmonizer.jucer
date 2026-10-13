@@ -16,6 +16,8 @@
         <FILE id="hV3kQp" name="HarmonyVoice.h" compile="0" resource="0" file="Source/DSP/HarmonyVoice.h"/>
         <FILE id="Tn8wLc" name="HarmonyVoice.cpp" compile="1" resource="0"
               file="Source/DSP/HarmonyVoice.cpp"/>
+        <FILE id="Hp4mRa" name="HarmonizerParameters.h" compile="0" resource="0"
+              file="Source/DSP/HarmonizerParameters.h"/>
         <FILE id="Dc5fGz" name="DspConfig.h" compile="0" resource="0" file="Source/DSP/DspConfig.h"/>
         <FILE id="pD2rXm" name="PitchDetector.h" compile="0" resource="0" file="Source/DSP/PitchDetector.h"/>
         <FILE id="Gy6sBv" name="PitchDetector.cpp" compile="1" resource="0"
@@ -24,11 +26,18 @@
         <FILE id="Wq4zNe" name="PitchShifter.cpp" compile="1" resource="0"
               file="Source/DSP/PitchShifter.cpp"/>
       </GROUP>
+      <GROUP id="{6A2C8E4F-1B3D-4E7A-9F2C-8D4B6A1E3C57}" name="GUI">
+        <FILE id="Ik2bHd" name="NoteKeyboard.h" compile="0" resource="0"
+              file="Source/GUI/NoteKeyboard.h"/>
+        <FILE id="Ik3cPp" name="NoteKeyboard.cpp" compile="1" resource="0"
+              file="Source/GUI/NoteKeyboard.cpp"/>
+        <FILE id="Lm4dHd" name="LevelMeter.h" compile="0" resource="0" file="Source/GUI/LevelMeter.h"/>
+      </GROUP>
       <GROUP id="{8C1D5E07-2F4B-4A93-B6E8-71F0C2D4A5B9}" name="Midi">
-        <FILE id="mR7cYh" name="IntervalController.h" compile="0" resource="0"
-              file="Source/Midi/IntervalController.h"/>
-        <FILE id="Lx5gUa" name="IntervalController.cpp" compile="1" resource="0"
-              file="Source/Midi/IntervalController.cpp"/>
+        <FILE id="mR7cYh" name="NoteController.h" compile="0" resource="0"
+              file="Source/Midi/NoteController.h"/>
+        <FILE id="Lx5gUa" name="NoteController.cpp" compile="1" resource="0"
+              file="Source/Midi/NoteController.cpp"/>
       </GROUP>
       <GROUP id="{E4A9C6B2-7D18-4F05-9C3A-5B2E8D1F7A60}" name="Utils">
         <FILE id="bF1nWs" name="RingBuffer.h" compile="0" resource="0" file="Source/Utils/RingBuffer.h"/>

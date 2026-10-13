@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="Ps7Sh1" name="PitchShifterTests" projectType="consoleapp" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
+  <MAINGROUP id="Ps8Gr2" name="PitchShifterTests">
+    <GROUP id="{3D7A2B1C-6E4F-4A8B-9C2D-1F5E7A3B9C60}" name="Tests">
+      <FILE id="Psf1Ts" name="PitchShifterTests.cpp" compile="1" resource="0"
+            file="PitchShifterTests.cpp"/>
+    </GROUP>
+    <GROUP id="{4E8B3C2D-7F5A-4B9C-8D3E-2A6F8B4C0D71}" name="DSP">
+      <FILE id="Psf2Dc" name="DspConfig.h" compile="0" resource="0" file="../../Source/DSP/DspConfig.h"/>
+      <FILE id="Psf3Sh" name="PitchShifter.h" compile="0" resource="0" file="../../Source/DSP/PitchShifter.h"/>
+      <FILE id="Psf4Sc" name="PitchShifter.cpp" compile="1" resource="0"
+            file="../../Source/DSP/PitchShifter.cpp"/>
+      <FILE id="Psf5Dh" name="PitchDetector.h" compile="0" resource="0" file="../../Source/DSP/PitchDetector.h"/>
+      <FILE id="Psf6Dc" name="PitchDetector.cpp" compile="1" resource="0"
+            file="../../Source/DSP/PitchDetector.cpp"/>
+    </GROUP>
+    <GROUP id="{5F9C4D3E-8A6B-4C0D-9E4F-3B7A9C5D1E82}" name="Utils">
+      <FILE id="Psf7Th" name="TuningUtils.h" compile="0" resource="0" file="../../Source/Utils/TuningUtils.h"/>
+      <FILE id="Psf8Tc" name="TuningUtils.cpp" compile="1" resource="0"
+            file="../../Source/Utils/TuningUtils.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+  <EXPORTFORMATS>
+    <VS2026 targetFolder="Builds/VisualStudio2026">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="PitchShifterTests" headerPath="../../../../ThirdParty/signalsmith-stretch/include&#10;../../../../ThirdParty/signalsmith-linear/include"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="PitchShifterTests" headerPath="../../../../ThirdParty/signalsmith-stretch/include&#10;../../../../ThirdParty/signalsmith-linear/include"/>
+      </CONFIGURATIONS>
+    </VS2026>
+  </EXPORTFORMATS>
+</JUCERPROJECT>

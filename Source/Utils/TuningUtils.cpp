@@ -1,5 +1,6 @@
 #include "TuningUtils.h"
 #include <array>
+#include <cmath>
 
 namespace
 {
@@ -24,4 +25,17 @@ float TuningUtils::getEqualTemperedRatio (int pitchClass)
 {
     const int wrapped = ((pitchClass % 12) + 12) % 12;
     return equalTemperedRatios[static_cast<std::size_t> (wrapped)];
+}
+
+const char* TuningUtils::getIntervalName (int semitones)
+{
+    static constexpr const char* names[] { "Uni", "m2", "M2", "m3", "M3", "P4", "TT",
+                                           "P5", "m6", "M6", "m7", "M7", "Oct" };
+    const int size = semitones < 0 ? -semitones : semitones;
+    return size <= 12 ? names[size] : "";
+}
+
+float TuningUtils::frequencyToMidiNote (float hz)
+{
+    return 69.0f + 12.0f * std::log2 (hz / 440.0f);
 }

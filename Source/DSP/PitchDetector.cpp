@@ -1,5 +1,4 @@
 #include "PitchDetector.h"
-
 void PitchDetector::prepare(double sampleRate, int numChannels)
 {
     currSampleRate = sampleRate;

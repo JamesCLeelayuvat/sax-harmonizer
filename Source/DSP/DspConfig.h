@@ -8,4 +8,5 @@ namespace DspConfig
 {
     inline constexpr int fftOrder = 11;
     inline constexpr int fftSize = 1 << fftOrder;
+    constexpr int maxVoices = 5;
 }

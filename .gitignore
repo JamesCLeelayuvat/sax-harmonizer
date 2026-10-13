@@ -24,3 +24,6 @@ xcuserdata/
 !.vscode/tasks.json
 !.vscode/launch.json
 .cache/
+
+# CMake build output
+build/

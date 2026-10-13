@@ -32,29 +32,36 @@ Keep the edits short and replace outdated text rather than appending. When you u
   `-p:PlatformToolset=v143` is required. Projucer targets VS 2026 (v145), but only the VS 2022 Build Tools (v143) are installed.
 - Output: `Builds/VisualStudio2026/x64/Debug/App/NewProject.exe` (the exe still has the old project name). The VS Code launch config "Debug sax-harmonizer" builds and then runs it.
 - The top-level `VisualStudio2026/` folder (`NewProject.sln`) is a stale leftover export. Use `Builds/VisualStudio2026/`.
-- C++20, MSVC.
+- **CMake (alternative build):** `CMakeLists.txt` + `CMakePresets.json` build the app and both test apps in parallel to Projucer (pulls JUCE in via `add_subdirectory`, `-DJUCE_DIR=` overrides the path). Source lists there must be kept in sync with the `.jucer` by hand. `cmake --preset vs2022` → `cmake --build --preset debug` → `ctest --preset debug`. Output: `build/SaxHarmonizer_artefacts/Debug/sax-harmonizer.exe`.
+- MSVC, compiled as **C++17** (the `.jucer` doesn't set `cppLanguageStandard`, so the exported `.vcxproj` uses `stdcpp17`). C++20 features such as `std::numbers` are unavailable unless that's changed in Projucer.
 
 ## Tests
 
-`Tests/PitchDetectorTests.jucer` is a separate Projucer console app (modules: core, audio_basics, audio_formats, dsp) that compiles `Tests/PitchDetectorTests.cpp` with `Source/DSP/PitchDetector.cpp`. It feeds sine waves in and checks `getFrequency()` to within one FFT bin. There's no test framework, just a plain `main` that returns non-zero on failure. Build and run it with `powershell -ExecutionPolicy Bypass -File Tests/run_tests.ps1`. If you add source files to it, update that `.jucer` and run `Projucer.exe --resave`. `Tests/BenchmarkRunner.cpp` is still empty, and `Tests/test_signals/` has no files yet.
+`Tests/PitchDetectorTests.jucer` is a separate Projucer console app (modules: core, audio_basics, audio_formats, dsp) that compiles `Tests/PitchDetectorTests.cpp` with `Source/DSP/PitchDetector.cpp`. It feeds sine waves in and checks `getFrequency()` to within one FFT bin. There's no test framework, just a plain `main` that returns non-zero on failure. Build and run it with `powershell -ExecutionPolicy Bypass -File Tests/run_tests.ps1`. If you add source files to it, update that `.jucer` and run `Projucer.exe --resave`. `Tests/PitchShifterTests/` is a second console app in its own folder (so the two projects don't share `JuceLibraryCode/`). It compiles PitchShifter, PitchDetector and TuningUtils, runs sines through the shifter in 512-sample blocks, and checks the output pitch (measured with PitchDetector) and RMS level. Run it with `powershell -ExecutionPolicy Bypass -File Tests/PitchShifterTests/run_tests.ps1`. `Tests/BenchmarkRunner.cpp` is still empty, and `Tests/test_signals/` has no files yet.
 
 ## Architecture
 
 Signal flow (audio thread):
 
 ```
-MainComponent (juce::AudioAppComponent, 2 in / 2 out)
+MainComponent (juce::AudioAppComponent, 1 in (mono mic) / 2 out)
+  │   input meter -> engine -> master gain -> output meter -> copy ch0 to all outputs
   └─ HarmonizerEngine            all DSP, no GUI; prepare/process/release mirror the audio callbacks
        ├─ PitchDetector          estimates input f0; keeps recent samples in a RingBuffer
-       ├─ IntervalController     (voiceIndex, inputFrequency) -> semitone interval
+       ├─ NoteController         lock-free bitmask of GUI-selected absolute *written* notes (A3..G6, max 4 voices)
+       │                         + transposition (Concert / Bb = -2 / Eb = -9); voice i plays the i-th selected
+       │                         note, ascending; getSemitoneShiftFor(voice, inputHz) = concert target - input,
+       │                         so harmonies depend on PitchDetector accuracy
+       ├─ HarmonizerParameters   atomics: dryGain/harmonyGain (GUI -> engine), detectedFrequency (engine -> GUI)
        └─ HarmonyVoice(s)        one per harmony line (not yet added to the engine)
-            └─ PitchShifter      wraps signalsmith::stretch::SignalsmithStretch<float>
+            └─ PitchShifter      hand-written phase vocoder (STFT, hop = fftSize/4); a signalsmith stretch member remains but is unused
 ```
 
-- `MainComponent` only forwards `prepareToPlay` / `getNextAudioBlock` / `releaseResources` to `HarmonizerEngine`. Keep the DSP out of the GUI class.
-- `process()` works in place on the device buffer, using `startSample`/`numSamples` from the `AudioSourceChannelInfo`.
+- The engine and voices are the user's to implement. `MainComponent` does only routing and monitoring around the engine; keep the DSP out of it.
+- Channel contract: `HarmonizerEngine::process()` gets the mic in channel 0 and must leave its mono mix (dry + harmonies) in channel 0, working in place with `startSample`/`numSamples`. The GUI reaches the engine only via `getNoteController()` and `getParameters()`.
+- GUI (`Source/GUI/`): `NoteKeyboard` is a toggle piano of absolute written notes (labels show written name, plus concert name when transposed); a combo box above it picks the transposition. `LevelMeter` is a peak meter. The gain sliders are in dB, and the "Audio Settings..." button opens a JUCE `AudioDeviceSelectorComponent` whose device state is saved with `ApplicationProperties`.
 - `Source/DSP/DspConfig.h` holds shared DSP constants (`DspConfig::fftOrder` / `fftSize`). `PitchDetector`, `PitchShifter` and the tests all read the FFT size from there, so don't hard-code it anywhere else.
-- `Source/Utils/TuningUtils` has the 12-TET ratio lookup (`getEqualTemperedRatio(pitchClass)` gives 2^(pc/12) relative to the root).
+- `Source/Utils/TuningUtils` has the 12-TET ratio lookup (`getEqualTemperedRatio(pitchClass)` gives 2^(pc/12) relative to the root) and `frequencyToMidiNote(hz)`.
 - Code in `prepare`/`process` runs on the audio thread. Do allocation (stretch configuration, buffer sizing) in `prepare`, not in `process`.
 
 ## Third-party

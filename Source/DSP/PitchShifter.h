@@ -3,9 +3,8 @@
 #include <JuceHeader.h>
 #include <signalsmith-stretch/signalsmith-stretch.h>
 #include "DspConfig.h"
-#include <Source\Utils\RingBuffer.h>
-#include <numbers>
-#include <Source\Utils\TuningUtils.h>
+#include "../Utils/RingBuffer.h"
+#include "../Utils/TuningUtils.h"
 
 //==============================================================================
 /*
@@ -24,7 +23,7 @@ private:
     signalsmith::stretch::SignalsmithStretch<float> stretch;
     std::size_t writeIndex;
     RingBuffer inputBuffer{fftSize};
-    std::vector<float> outputAccumulator = std::vector<float>(fftSize * 2);
+    std::vector<float> outputAccumulator = std::vector<float>(fftSize);
     double currSampleRate;
     int currNumChannels;
     static constexpr auto fftOrder = DspConfig::fftOrder; // [1]
@@ -36,15 +35,22 @@ private:
     std::vector<float> fftData = std::vector<float>(fftSize * 2);
     std::vector<float> prevFftPhaseData = std::vector<float>(fftSize);
     std::vector<float> fftDataOut = std::vector<float>(fftSize * 2);
+    std::vector<float> hannWindow;
+    std::vector<float> outputPhase = std::vector<float>(fftSize / 2 + 1);
 };
-
-template <std::size_t N>
-static std::array<double, N> generateHannWindow()
+static void multiplyWindow(std::vector<float> &fftData, std::vector<float> window)
 {
-    std::array<double, N> window;
+    for (std::size_t i = 0; i < window.size(); i++)
+    {
+        fftData[i] = fftData[i] * window[i];
+    }
+}
+static std::vector<float> generateHannWindow(std::size_t N)
+{
+    std::vector<float> window = std::vector<float>(N);
     for (std::size_t i = 0; i < N; i++)
     {
-        window[i] = 0.5 - 0.5 * std::cos((2 * std::numbers::pi * i) / (N - 1));
+        window[i] = 0.5 - 0.5 * std::cos((2 * juce::MathConstants<float>::pi * i) / (N));
     }
 
     return window;
