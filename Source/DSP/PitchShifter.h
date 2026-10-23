@@ -58,7 +58,7 @@ static std::vector<float> generateHannWindow(std::size_t N)
     std::vector<float> window = std::vector<float>(N);
     for (std::size_t i = 0; i < N; i++)
     {
-        window[i] = 0.5 - 0.5 * std::cos((2 * juce::MathConstants<float>::pi * i) / (N));
+        window[i] = (float)(0.5 - 0.5 * std::cos((2 * juce::MathConstants<float>::pi * i) / (N)));
     }
 
     return window;

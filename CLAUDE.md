@@ -47,7 +47,7 @@ Signal flow (audio thread):
 MainComponent (juce::AudioAppComponent, 1 in (mono mic) / 2 out)
   │   input meter -> engine -> master gain -> output meter -> copy ch0 to all outputs
   └─ HarmonizerEngine            all DSP, no GUI; prepare/process/release mirror the audio callbacks
-       ├─ PitchDetector          estimates input f0; keeps recent samples in a RingBuffer
+       ├─ PitchDetector          estimates input f0: argmax bin of a non-overlapping fftSize block (own fifo, no RingBuffer)
        ├─ NoteController         lock-free bitmask of GUI-selected absolute *written* notes (A3..G6, max 4 voices)
        │                         + transposition (Concert / Bb = -2 / Eb = -9); voice i plays the i-th selected
        │                         note, ascending; getSemitoneShiftFor(voice, inputHz) = concert target - input,
@@ -55,7 +55,7 @@ MainComponent (juce::AudioAppComponent, 1 in (mono mic) / 2 out)
        ├─ HarmonizerParameters   atomics: dryGain/harmonyGain (GUI -> engine), detectedFrequency (engine -> GUI)
        └─ PitchShifter(s)        one per harmony voice (std::vector, DspConfig::maxVoices; HarmonyVoice wrapper was removed);
                                  hand-written phase vocoder (STFT, hop = fftSize/4) with Laroche–Dolson
-                                 peak-region shifting + identity phase locking; a signalsmith stretch member remains but is unused
+                                 peak-region shifting + identity phase locking (signalsmith is vendored but no longer used)
 ```
 
 - The engine and voices are the user's to implement. `MainComponent` does only routing and monitoring around the engine; keep the DSP out of it.

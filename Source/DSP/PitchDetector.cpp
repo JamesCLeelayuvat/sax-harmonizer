@@ -55,5 +55,17 @@ void PitchDetector::detectPitch()
         }
     }
 
-    frequency = maxIndex * (float)currSampleRate / fftSize;
+    if (maxIndex == 0)
+    {
+        frequency = 0.0f;
+        return;
+    }
+
+    float lower = std::log(fftData[maxIndex - 1] + 1e-12f);
+    float mid = std::log(fftData[maxIndex]);
+    float higher = std::log(fftData[maxIndex + 1] + 1e-12f);
+
+    float offset = (lower - higher) / (2 * (lower - 2 * mid + higher));
+
+    frequency = (maxIndex + offset) * (float)currSampleRate / fftSize;
 }

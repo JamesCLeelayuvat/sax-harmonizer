@@ -52,8 +52,8 @@ public:
 private:
     std::size_t size;
     std::vector<float> buffer;
-    int start;
-    int end;
+    std::size_t start;
+    std::size_t end;
 
     std::size_t getSize() const
     {

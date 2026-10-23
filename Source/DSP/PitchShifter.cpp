@@ -9,7 +9,6 @@ void PitchShifter::prepare(double sampleRate, int numChannels)
     std::fill(fftData.begin(), fftData.end(), 0);
     std::fill(fftDataOut.begin(), fftDataOut.end(), 0);
     std::fill(outputPhase.begin(), outputPhase.end(), 0);
-    std::fill(shiftedFreq.begin(), shiftedFreq.end(), 0);
     std::fill(outputMag.begin(), outputMag.end(), 0);
     hannWindow = generateHannWindow(fftSize);
 }
@@ -29,14 +28,13 @@ void PitchShifter::process(const juce::AudioBuffer<float> &input, juce::AudioBuf
 
     auto data = input.getReadPointer(0);
     auto dataOut = output.getWritePointer(0);
-    for (int i = 0; i < numSamples; i++)
+    for (int m = 0; m < numSamples; m++)
     {
         // adding sample by sample to input buffer
-        inputBuffer.push(data[i]);
+        inputBuffer.push(data[m]);
 
         if (writeIndex >= hopSize)
         {
-            std::fill(shiftedFreq.begin(), shiftedFreq.end(), 0);
             std::fill(outputMag.begin(), outputMag.end(), 0);
             writeIndex = 0;
             std::fill(fftDataOut.begin(), fftDataOut.end(), 0); // zero the output
@@ -71,13 +69,6 @@ void PitchShifter::process(const juce::AudioBuffer<float> &input, juce::AudioBuf
                 float realBin = k + deviation / (2 * juce::MathConstants<float>::pi * hopSize / fftSize);
                 realBinVector[k] = realBin;
 
-                // int newBin = round(TuningUtils::getEqualTemperedRatio(semitones) * k);
-                // if (newBin >= 0 && newBin <= fftSize / 2)
-                // {
-                //     shiftedFreq[newBin] = TuningUtils::getEqualTemperedRatio(semitones) * realBin;
-                //     dataMag[newBin] += mag;
-                //     // bin scaling portion
-                // }
             }
 
             peaks.clear();
@@ -166,7 +157,7 @@ void PitchShifter::process(const juce::AudioBuffer<float> &input, juce::AudioBuf
                 outputAccumulator[i] += fftDataOut[i];
             }
         }
-        dataOut[i] = outputAccumulator[writeIndex] / 1.5;
+        dataOut[m] = outputAccumulator[writeIndex] / 1.5;
         writeIndex++;
     }
 }
