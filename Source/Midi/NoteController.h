@@ -2,6 +2,7 @@
 
 #include <atomic>
 #include <cstdint>
+#include <vector>
 
 //==============================================================================
 /*
@@ -37,33 +38,33 @@ public:
     };
 
     // Semitones from written to concert pitch (0, -2 or -9)
-    static int getConcertOffset (Transposition transposition);
+    static int getConcertOffset(Transposition transposition);
 
     // GUI thread. Returns false (and changes nothing) if the note is out of
     // range or would exceed maxVoices.
-    bool setNoteEnabled (int writtenNote, bool enabled);
-    bool isNoteEnabled (int writtenNote) const;
+    bool setNoteEnabled(int writtenNote, bool enabled);
+    bool isNoteEnabled(int writtenNote) const;
     void clear();
 
     // Any thread
-    void setTransposition (Transposition newTransposition);
+    void setTransposition(Transposition newTransposition);
     Transposition getTransposition() const;
     int getNumActiveVoices() const;
 
     // Note for voice `voiceIndex` (0 .. getNumActiveVoices() - 1), or -1 for an
     // inactive voice.
-    int getWrittenNoteFor (int voiceIndex) const;
-    int getConcertNoteFor (int voiceIndex) const;
+    int getWrittenNoteFor(int voiceIndex) const;
+    int getConcertNoteFor(int voiceIndex) const;
 
     // Semitones to shift an input at inputFrequency (Hz) so it lands on voice
     // `voiceIndex`'s concert note. Can be fractional, which also corrects an
     // out-of-tune input. Returns 0 for an inactive voice or no input (<= 0 Hz).
-    float getSemitoneShiftFor (int voiceIndex, float inputFrequency) const;
+    float getSemitoneShiftFor(int voiceIndex, float inputFrequency) const;
 
 private:
-    static bool isInRange (int writtenNote);
-    static std::uint64_t bitFor (int writtenNote);
+    static bool isInRange(int writtenNote);
+    static std::uint64_t bitFor(int writtenNote);
 
-    std::atomic<std::uint64_t> enabledMask { 0 }; // bit i = written note lowestNote + i
-    std::atomic<Transposition> transposition { Transposition::concert };
+    std::atomic<std::uint64_t> enabledMask{0}; // bit i = written note lowestNote + i
+    std::atomic<Transposition> transposition{Transposition::concert};
 };

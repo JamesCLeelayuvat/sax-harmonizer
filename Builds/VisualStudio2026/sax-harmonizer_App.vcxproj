@@ -149,7 +149,6 @@
     <ClCompile Include="..\..\Source\Main.cpp"/>
     <ClCompile Include="..\..\Source\MainComponent.cpp"/>
     <ClCompile Include="..\..\Source\DSP\HarmonizerEngine.cpp"/>
-    <ClCompile Include="..\..\Source\DSP\HarmonyVoice.cpp"/>
     <ClCompile Include="..\..\Source\DSP\PitchDetector.cpp"/>
     <ClCompile Include="..\..\Source\DSP\PitchShifter.cpp"/>
     <ClCompile Include="..\..\Source\GUI\NoteKeyboard.cpp"/>
@@ -3205,7 +3204,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\Source\MainComponent.h"/>
     <ClInclude Include="..\..\Source\DSP\HarmonizerEngine.h"/>
-    <ClInclude Include="..\..\Source\DSP\HarmonyVoice.h"/>
     <ClInclude Include="..\..\Source\DSP\HarmonizerParameters.h"/>
     <ClInclude Include="..\..\Source\DSP\DspConfig.h"/>
     <ClInclude Include="..\..\Source\DSP\PitchDetector.h"/>

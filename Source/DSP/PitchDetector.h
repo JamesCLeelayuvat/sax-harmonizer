@@ -16,9 +16,9 @@ public:
 
     void pushSamples(const juce::AudioBuffer<float> &input, int numSamples);
     float getFrequency() const;
-    void pushNextSampleIntoFifo(float sample);
 
 private:
+    void pushNextSampleIntoFifo(float sample);
     void detectPitch();
     double currSampleRate;
     int currNumChannels;

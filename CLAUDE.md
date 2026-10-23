@@ -53,15 +53,16 @@ MainComponent (juce::AudioAppComponent, 1 in (mono mic) / 2 out)
        │                         note, ascending; getSemitoneShiftFor(voice, inputHz) = concert target - input,
        │                         so harmonies depend on PitchDetector accuracy
        ├─ HarmonizerParameters   atomics: dryGain/harmonyGain (GUI -> engine), detectedFrequency (engine -> GUI)
-       └─ HarmonyVoice(s)        one per harmony line (not yet added to the engine)
-            └─ PitchShifter      hand-written phase vocoder (STFT, hop = fftSize/4); a signalsmith stretch member remains but is unused
+       └─ PitchShifter(s)        one per harmony voice (std::vector, DspConfig::maxVoices; HarmonyVoice wrapper was removed);
+                                 hand-written phase vocoder (STFT, hop = fftSize/4) with Laroche–Dolson
+                                 peak-region shifting + identity phase locking; a signalsmith stretch member remains but is unused
 ```
 
 - The engine and voices are the user's to implement. `MainComponent` does only routing and monitoring around the engine; keep the DSP out of it.
 - Channel contract: `HarmonizerEngine::process()` gets the mic in channel 0 and must leave its mono mix (dry + harmonies) in channel 0, working in place with `startSample`/`numSamples`. The GUI reaches the engine only via `getNoteController()` and `getParameters()`.
 - GUI (`Source/GUI/`): `NoteKeyboard` is a toggle piano of absolute written notes (labels show written name, plus concert name when transposed); a combo box above it picks the transposition. `LevelMeter` is a peak meter. The gain sliders are in dB, and the "Audio Settings..." button opens a JUCE `AudioDeviceSelectorComponent` whose device state is saved with `ApplicationProperties`.
 - `Source/DSP/DspConfig.h` holds shared DSP constants (`DspConfig::fftOrder` / `fftSize`). `PitchDetector`, `PitchShifter` and the tests all read the FFT size from there, so don't hard-code it anywhere else.
-- `Source/Utils/TuningUtils` has the 12-TET ratio lookup (`getEqualTemperedRatio(pitchClass)` gives 2^(pc/12) relative to the root) and `frequencyToMidiNote(hz)`.
+- `Source/Utils/TuningUtils` has the 12-TET ratio (`getEqualTemperedRatio(float semitones)` computes 2^(n/12), fractional shifts allowed, clamped to -12..+12) and `frequencyToMidiNote(hz)`.
 - Code in `prepare`/`process` runs on the audio thread. Do allocation (stretch configuration, buffer sizing) in `prepare`, not in `process`.
 
 ## Third-party

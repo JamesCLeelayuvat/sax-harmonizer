@@ -13,9 +13,6 @@
               file="Source/DSP/HarmonizerEngine.h"/>
         <FILE id="Jc7vNk" name="HarmonizerEngine.cpp" compile="1" resource="0"
               file="Source/DSP/HarmonizerEngine.cpp"/>
-        <FILE id="hV3kQp" name="HarmonyVoice.h" compile="0" resource="0" file="Source/DSP/HarmonyVoice.h"/>
-        <FILE id="Tn8wLc" name="HarmonyVoice.cpp" compile="1" resource="0"
-              file="Source/DSP/HarmonyVoice.cpp"/>
         <FILE id="Hp4mRa" name="HarmonizerParameters.h" compile="0" resource="0"
               file="Source/DSP/HarmonizerParameters.h"/>
         <FILE id="Dc5fGz" name="DspConfig.h" compile="0" resource="0" file="Source/DSP/DspConfig.h"/>

@@ -2,13 +2,13 @@
 
 //==============================================================================
 /*
-    12-TET frequency ratios relative to the root, indexed by pitch class (0-11).
+    12-TET frequency ratios relative to the root, for -12..+12 semitones.
 */
 namespace TuningUtils
 {
-    // Returns 2^(pitchClass / 12). pitchClass is wrapped into 0-11, so octave
-    // information is dropped (e.g. 12 -> 1.0, -1 -> ratio for 11).
-    float getEqualTemperedRatio (int pitchClass);
+    // Returns 2^(semitones / 12) for -12..12 (e.g. -12 -> 0.5, 7 -> 1.498,
+    // 12 -> 2.0). Values outside that range are clamped to +/-12.
+    float getEqualTemperedRatio (float semitones);
 
     // Short name for an interval size, ignoring direction: 4 and -4 both give "M3".
     // Covers 0-12 semitones ("Uni" ... "Oct"); larger intervals give "".

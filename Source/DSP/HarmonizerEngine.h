@@ -1,7 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "HarmonyVoice.h"
+#include "PitchShifter.h"
 #include "HarmonizerParameters.h"
 #include "PitchDetector.h"
 #include "../Midi/NoteController.h"
@@ -35,8 +35,10 @@ private:
     PitchDetector detector;
     NoteController notes;
     HarmonizerParameters parameters;
-    std::vector<int> intervalList;
-    std::vector<HarmonyVoice> voices = std::vector<HarmonyVoice>(DspConfig::maxVoices);
+    std::vector<PitchShifter> voices = std::vector<PitchShifter>(DspConfig::maxVoices);
     juce::AudioBuffer<float> input;
-    PitchDetector detector;
+    juce::AudioBuffer<float> output;
+    juce::AudioBuffer<float> outputCombined;
+
+    float frequency;
 };
