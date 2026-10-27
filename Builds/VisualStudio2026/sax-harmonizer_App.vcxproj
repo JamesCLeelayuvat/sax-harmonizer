@@ -151,6 +151,7 @@
     <ClCompile Include="..\..\Source\DSP\HarmonizerEngine.cpp"/>
     <ClCompile Include="..\..\Source\DSP\PitchDetector.cpp"/>
     <ClCompile Include="..\..\Source\DSP\PitchShifter.cpp"/>
+    <ClCompile Include="..\..\Source\DSP\ReferencePitchShifter.cpp"/>
     <ClCompile Include="..\..\Source\GUI\NoteKeyboard.cpp"/>
     <ClCompile Include="..\..\Source\Midi\NoteController.cpp"/>
     <ClCompile Include="..\..\Source\Utils\TuningUtils.cpp"/>
@@ -3208,6 +3209,7 @@
     <ClInclude Include="..\..\Source\DSP\DspConfig.h"/>
     <ClInclude Include="..\..\Source\DSP\PitchDetector.h"/>
     <ClInclude Include="..\..\Source\DSP\PitchShifter.h"/>
+    <ClInclude Include="..\..\Source\DSP\ReferencePitchShifter.h"/>
     <ClInclude Include="..\..\Source\GUI\NoteKeyboard.h"/>
     <ClInclude Include="..\..\Source\GUI\LevelMeter.h"/>
     <ClInclude Include="..\..\Source\Midi\NoteController.h"/>

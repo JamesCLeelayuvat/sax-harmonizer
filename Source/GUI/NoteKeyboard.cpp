@@ -1,14 +1,15 @@
 #include "NoteKeyboard.h"
+#include "../Utils/TuningUtils.h"
 
 namespace
 {
     const juce::Colour selectedColour { 0xffff9f1c };
     const juce::Colour blackKeyColour { 0xff1e1e1e };
 
-    // Flats rather than sharps, since sax music is usually written that way
-    juce::String noteName (int note, bool includeOctave)
+    // "+4", "-3", "0"
+    juce::String signedSemitones (int semitones)
     {
-        return juce::MidiMessage::getMidiNoteName (note, false, includeOctave, 4);
+        return (semitones > 0 ? "+" : "") + juce::String (semitones);
     }
 }
 
@@ -94,28 +95,26 @@ void NoteKeyboard::drawKey (juce::Graphics& g, int note) const
         textColour = textColour.withAlpha (0.35f);
     g.setColour (textColour);
 
-    // Black keys are too narrow for more than the note letter
+    const int interval = NoteController::getIntervalFor (note);
+
+    // Black keys are too narrow for more than the semitones
     if (black)
     {
         g.setFont (juce::FontOptions (10.0f, juce::Font::bold));
-        g.drawFittedText (noteName (note, false), bounds.reduced (1.0f, 4.0f).toNearestInt(),
+        g.drawFittedText (signedSemitones (interval), bounds.reduced (1.0f, 4.0f).toNearestInt(),
                           juce::Justification::centredBottom, 1);
         return;
     }
 
-    // White keys: written name, with the concert name underneath when transposed
+    // White keys: interval name, with the semitones underneath
     auto textArea = bounds.reduced (2.0f, 6.0f).toNearestInt();
-    const int offset = NoteController::getConcertOffset (notes.getTransposition());
 
-    if (offset != 0)
-    {
-        g.setFont (juce::FontOptions (10.0f));
-        g.drawFittedText (noteName (note + offset, true), textArea.removeFromBottom (14),
-                          juce::Justification::centred, 1);
-    }
+    g.setFont (juce::FontOptions (10.0f));
+    g.drawFittedText (signedSemitones (interval), textArea.removeFromBottom (14),
+                      juce::Justification::centred, 1);
 
     g.setFont (juce::FontOptions (12.0f, juce::Font::bold));
-    g.drawFittedText (noteName (note, true), textArea.removeFromBottom (16),
+    g.drawFittedText (TuningUtils::getIntervalName (interval), textArea.removeFromBottom (16),
                       juce::Justification::centred, 1);
 }
 

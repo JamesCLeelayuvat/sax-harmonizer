@@ -38,6 +38,7 @@ target_sources(SaxHarmonizer PRIVATE
     Source/DSP/HarmonizerEngine.cpp
     Source/DSP/PitchDetector.cpp
     Source/DSP/PitchShifter.cpp
+    Source/DSP/ReferencePitchShifter.cpp
     Source/GUI/NoteKeyboard.cpp
     Source/Midi/NoteController.cpp
     Source/Utils/TuningUtils.cpp)

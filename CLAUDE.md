@@ -47,20 +47,25 @@ Signal flow (audio thread):
 MainComponent (juce::AudioAppComponent, 1 in (mono mic) / 2 out)
   │   input meter -> engine -> master gain -> output meter -> copy ch0 to all outputs
   └─ HarmonizerEngine            all DSP, no GUI; prepare/process/release mirror the audio callbacks
-       ├─ PitchDetector          estimates input f0: argmax bin of a non-overlapping fftSize block (own fifo, no RingBuffer)
-       ├─ NoteController         lock-free bitmask of GUI-selected absolute *written* notes (A3..G6, max 4 voices)
-       │                         + transposition (Concert / Bb = -2 / Eb = -9); voice i plays the i-th selected
-       │                         note, ascending; getSemitoneShiftFor(voice, inputHz) = concert target - input,
-       │                         so harmonies depend on PitchDetector accuracy
+       ├─ PitchDetector          estimates input f0: harmonic product spectrum (4 harmonics, 60-1600 Hz, candidates gated
+                                 to real peaks within 20 dB of the max) + parabolic interpolation, on a non-overlapping,
+                                 unwindowed fftSize block (own fifo, no RingBuffer)
+       ├─ NoteController         RELATIVE mode: lock-free bitmask of GUI-selected keys C4..C6 (max 4 voices); each key
+       │                         is an interval from unisonNote C5 (E5 = +4), so getSemitoneShiftFor(voice) is a fixed
+       │                         interval and does not use PitchDetector. Voice i = i-th selected key, ascending.
+       │                         Transposition is still stored but no longer affects the shift (was: absolute notes,
+       │                         shift = target - detected, dropped because detector errors broke it)
        ├─ HarmonizerParameters   atomics: dryGain/harmonyGain (GUI -> engine), detectedFrequency (engine -> GUI)
        └─ PitchShifter(s)        one per harmony voice (std::vector, DspConfig::maxVoices; HarmonyVoice wrapper was removed);
                                  hand-written phase vocoder (STFT, hop = fftSize/4) with Laroche–Dolson
                                  peak-region shifting + identity phase locking (signalsmith is vendored but no longer used)
+       └─ ReferencePitchShifter  Claude-written comparison shifter, same algorithm + frame-to-frame peak tracking, same API.
+                                 TEMPORARY isolation test: engine voices use it, and the dry signal is muted (marked ISOLATION TEST)
 ```
 
 - The engine and voices are the user's to implement. `MainComponent` does only routing and monitoring around the engine; keep the DSP out of it.
 - Channel contract: `HarmonizerEngine::process()` gets the mic in channel 0 and must leave its mono mix (dry + harmonies) in channel 0, working in place with `startSample`/`numSamples`. The GUI reaches the engine only via `getNoteController()` and `getParameters()`.
-- GUI (`Source/GUI/`): `NoteKeyboard` is a toggle piano of absolute written notes (labels show written name, plus concert name when transposed); a combo box above it picks the transposition. `LevelMeter` is a peak meter. The gain sliders are in dB, and the "Audio Settings..." button opens a JUCE `AudioDeviceSelectorComponent` whose device state is saved with `ApplicationProperties`.
+- GUI (`Source/GUI/`): `NoteKeyboard` is a toggle piano of intervals (keys labelled with interval name + semitones, C5 = unison); the transposition combo box above it currently has no effect. `LevelMeter` is a peak meter. The gain sliders are in dB, and the "Audio Settings..." button opens a JUCE `AudioDeviceSelectorComponent` whose device state is saved with `ApplicationProperties`.
 - `Source/DSP/DspConfig.h` holds shared DSP constants (`DspConfig::fftOrder` / `fftSize`). `PitchDetector`, `PitchShifter` and the tests all read the FFT size from there, so don't hard-code it anywhere else.
 - `Source/Utils/TuningUtils` has the 12-TET ratio (`getEqualTemperedRatio(float semitones)` computes 2^(n/12), fractional shifts allowed, clamped to -12..+12) and `frequencyToMidiNote(hz)`.
 - Code in `prepare`/`process` runs on the audio thread. Do allocation (stretch configuration, buffer sizing) in `prepare`, not in `process`.

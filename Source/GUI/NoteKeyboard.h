@@ -5,11 +5,11 @@
 
 //==============================================================================
 /*
-    Piano-style keyboard for choosing harmony notes. Keys are absolute *written*
-    notes (NoteController::lowestNote..highestNote): with the controller set to
-    Eb, pressing written C5 makes a voice sound what an alto fingering C5 sounds
-    (concert Eb4). Clicking a key toggles that note in the NoteController.
-    White keys show the written name, plus the concert name when transposed.
+    Piano-style keyboard for choosing harmony intervals. Each key is an interval
+    from the incoming note, counted from NoteController::unisonNote (C5): E5 is
+    a major 3rd up, A4 a minor 3rd down. Clicking a key toggles it in the
+    NoteController. White keys show the interval name and semitones, black keys
+    just the semitones.
 */
 class NoteKeyboard : public juce::Component
 {

@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include "PitchShifter.h"
+#include "ReferencePitchShifter.h"
 #include "HarmonizerParameters.h"
 #include "PitchDetector.h"
 #include "../Midi/NoteController.h"
@@ -35,7 +36,8 @@ private:
     PitchDetector detector;
     NoteController notes;
     HarmonizerParameters parameters;
-    std::vector<PitchShifter> voices = std::vector<PitchShifter>(DspConfig::maxVoices);
+    // ISOLATION TEST: routed through ReferencePitchShifter. Switch back to PitchShifter to compare.
+    std::vector<ReferencePitchShifter> voices = std::vector<ReferencePitchShifter>(DspConfig::maxVoices);
     juce::AudioBuffer<float> input;
     juce::AudioBuffer<float> output;
     juce::AudioBuffer<float> outputCombined;

@@ -877,6 +877,9 @@
     <ClCompile Include="..\..\Source\DSP\PitchShifter.cpp">
       <Filter>sax-harmonizer\Source\DSP</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\DSP\ReferencePitchShifter.cpp">
+      <Filter>sax-harmonizer\Source\DSP</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\GUI\NoteKeyboard.cpp">
       <Filter>sax-harmonizer\Source\GUI</Filter>
     </ClCompile>
@@ -4153,6 +4156,9 @@
       <Filter>sax-harmonizer\Source\DSP</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\DSP\PitchShifter.h">
+      <Filter>sax-harmonizer\Source\DSP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\DSP\ReferencePitchShifter.h">
       <Filter>sax-harmonizer\Source\DSP</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\GUI\NoteKeyboard.h">

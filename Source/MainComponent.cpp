@@ -191,7 +191,6 @@ void MainComponent::updateVoicesLabel (float inputFrequency)
 {
     const auto& notes = engine.getNoteController();
     const int numVoices = notes.getNumActiveVoices();
-    const bool transposed = NoteController::getConcertOffset (notes.getTransposition()) != 0;
 
     juce::String text;
     text << "Harmony voices " << numVoices << "/" << NoteController::maxVoices << ":  ";
@@ -201,17 +200,15 @@ void MainComponent::updateVoicesLabel (float inputFrequency)
 
     for (int voice = 0; voice < numVoices; ++voice)
     {
+        const int interval = juce::roundToInt (notes.getSemitoneShiftFor (voice));
         text << (voice > 0 ? ",   " : "")
-             << juce::MidiMessage::getMidiNoteName (notes.getWrittenNoteFor (voice), false, true, 4);
+             << TuningUtils::getIntervalName (interval) << " " << (interval > 0 ? "+" : "") << interval;
 
-        if (transposed)
-            text << " (concert " << juce::MidiMessage::getMidiNoteName (notes.getConcertNoteFor (voice), false, true, 4) << ")";
-
-        // With a detected input note, also show how far the input gets shifted
+        // With a detected input note, also show the (concert) note the voice sounds
         if (inputFrequency > 0.0f)
         {
-            const auto shift = notes.getSemitoneShiftFor (voice, inputFrequency);
-            text << " " << (shift >= 0.0f ? "+" : "") << juce::String (shift, 1) << " st";
+            const int inputNote = juce::roundToInt (TuningUtils::frequencyToMidiNote (inputFrequency));
+            text << " = " << juce::MidiMessage::getMidiNoteName (inputNote + interval, false, true, 4);
         }
     }
 

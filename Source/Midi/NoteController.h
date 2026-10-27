@@ -6,29 +6,33 @@
 
 //==============================================================================
 /*
-    Decides which note each harmony voice should sound.
+    Decides which interval each harmony voice plays.
 
-    The GUI turns notes on and off on a keyboard of *written* (fingered) sax
-    notes, and picks the transposition (Concert, Bb or Eb). The audio thread asks
-    which concert note each voice plays, or directly how many semitones to shift
-    the input by to reach it. Everything is atomic, so both threads can use it
-    without locks.
+    Relative mode: each keyboard key is an interval from whatever note comes in,
+    measured from unisonNote (C5). Selecting E5 gives a voice a major 3rd (+4)
+    above the input, A4 a minor 3rd (-3) below it, whatever you play. The shift
+    doesn't depend on the detected pitch. Everything is atomic, so the GUI and
+    the audio thread can both use it without locks.
 
-    Notes are MIDI note numbers (60 = middle C, C4). Written note + transposition
-    offset = concert (sounding) note: on an Eb alto, written C5 (72) sounds
-    Eb4 (72 - 9 = 63).
+    Notes are MIDI note numbers (60 = middle C, C4). The transposition (Concert,
+    Bb or Eb) is still stored, but intervals are the same in every transposition,
+    so it no longer affects the shift.
 
-    Voices are numbered in ascending note order: with written E4 and G4 selected,
-    voice 0 plays E4 and voice 1 plays G4.
+    Voices are numbered in ascending note order (= ascending interval): with
+    A4 and E5 selected, voice 0 plays -3 and voice 1 plays +4.
 */
 class NoteController
 {
 public:
-    // Written range shown on the keyboard: A3..G6, which covers the whole sax
-    // range (low Bb3 to high F#6) and starts and ends on a white key
-    static constexpr int lowestNote = 57;
-    static constexpr int highestNote = 91;
+    // Keyboard range C4..C6: one octave each side of the unison key, which is as
+    // far as the shifter goes (TuningUtils clamps to +/-12 semitones)
+    static constexpr int lowestNote = 60;
+    static constexpr int highestNote = 84;
+    static constexpr int unisonNote = 72; // C5 = no shift
     static constexpr int maxVoices = 4;
+
+    // Semitones from the unison key, e.g. 76 (E5) -> +4
+    static int getIntervalFor(int note);
 
     enum class Transposition
     {
@@ -56,10 +60,9 @@ public:
     int getWrittenNoteFor(int voiceIndex) const;
     int getConcertNoteFor(int voiceIndex) const;
 
-    // Semitones to shift an input at inputFrequency (Hz) so it lands on voice
-    // `voiceIndex`'s concert note. Can be fractional, which also corrects an
-    // out-of-tune input. Returns 0 for an inactive voice or no input (<= 0 Hz).
-    float getSemitoneShiftFor(int voiceIndex, float inputFrequency) const;
+    // Semitones to shift the input by for voice `voiceIndex` (its interval).
+    // Returns 0 for an inactive voice.
+    float getSemitoneShiftFor(int voiceIndex) const;
 
 private:
     static bool isInRange(int writtenNote);

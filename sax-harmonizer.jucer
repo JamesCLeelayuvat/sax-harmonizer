@@ -22,6 +22,10 @@
         <FILE id="kS9fJt" name="PitchShifter.h" compile="0" resource="0" file="Source/DSP/PitchShifter.h"/>
         <FILE id="Wq4zNe" name="PitchShifter.cpp" compile="1" resource="0"
               file="Source/DSP/PitchShifter.cpp"/>
+        <FILE id="Rf8pVs" name="ReferencePitchShifter.h" compile="0" resource="0"
+              file="Source/DSP/ReferencePitchShifter.h"/>
+        <FILE id="Rf9cXq" name="ReferencePitchShifter.cpp" compile="1" resource="0"
+              file="Source/DSP/ReferencePitchShifter.cpp"/>
       </GROUP>
       <GROUP id="{6A2C8E4F-1B3D-4E7A-9F2C-8D4B6A1E3C57}" name="GUI">
         <FILE id="Ik2bHd" name="NoteKeyboard.h" compile="0" resource="0"

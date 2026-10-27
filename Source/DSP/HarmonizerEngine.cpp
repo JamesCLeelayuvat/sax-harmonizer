@@ -20,16 +20,19 @@ void HarmonizerEngine::process(juce::AudioBuffer<float> &buffer, int startSample
     frequency = detector.getFrequency();
     parameters.detectedFrequency = frequency;
 
-    buffer.applyGain(0, startSample, numSamples, parameters.dryGain);
+    // ISOLATION TEST: drop the dry signal so only the shifted voices are output.
+    // Restore with: buffer.applyGain(0, startSample, numSamples, parameters.dryGain);
+    buffer.clear(0, startSample, numSamples);
     for (int i = 0; i < notes.getNumActiveVoices(); i++)
     {
-        voices[i].setSemitones(notes.getSemitoneShiftFor(i, frequency));
+        voices[i].setSemitones(notes.getSemitoneShiftFor(i));
         voices[i].process(input, output, numSamples);
         outputCombined.addFrom(0, 0, output, 0, 0, numSamples, 1.);
     }
     outputCombined.applyGain(parameters.harmonyGain);
     buffer.addFrom(0, startSample, outputCombined, 0, 0, numSamples, 1.);
-    buffer.applyGain(0, startSample, numSamples, 1.0f / (notes.getNumActiveVoices() + 1.0f));
+    // ISOLATION TEST: normalise by voices only (no dry). Restore: 1.0f / (notes.getNumActiveVoices() + 1.0f)
+    buffer.applyGain(0, startSample, numSamples, 1.0f / std::max(1, notes.getNumActiveVoices()));
     outputCombined.clear();
     /*
     get the intervals that it needs to be pitched by. assign each to a harmony voice.

@@ -1,5 +1,4 @@
 #include "NoteController.h"
-#include "../Utils/TuningUtils.h"
 
 namespace
 {
@@ -110,11 +109,13 @@ int NoteController::getConcertNoteFor(int voiceIndex) const
     return written < 0 ? -1 : written + getConcertOffset(getTransposition());
 }
 
-float NoteController::getSemitoneShiftFor(int voiceIndex, float inputFrequency) const
+int NoteController::getIntervalFor(int note)
 {
-    const int target = getConcertNoteFor(voiceIndex);
-    if (target < 0 || inputFrequency <= 0.0f)
-        return 0.0f;
+    return note - unisonNote;
+}
 
-    return (float)target - TuningUtils::frequencyToMidiNote(inputFrequency);
+float NoteController::getSemitoneShiftFor(int voiceIndex) const
+{
+    const int written = getWrittenNoteFor(voiceIndex);
+    return written < 0 ? 0.0f : (float)getIntervalFor(written);
 }
