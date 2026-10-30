@@ -37,7 +37,7 @@ Keep the edits short and replace outdated text rather than appending. When you u
 
 ## Tests
 
-`Tests/PitchDetectorTests.jucer` is a separate Projucer console app (modules: core, audio_basics, audio_formats, dsp) that compiles `Tests/PitchDetectorTests.cpp` with `Source/DSP/PitchDetector.cpp`. It feeds sine waves in and checks `getFrequency()` to within one FFT bin. There's no test framework, just a plain `main` that returns non-zero on failure. Build and run it with `powershell -ExecutionPolicy Bypass -File Tests/run_tests.ps1`. If you add source files to it, update that `.jucer` and run `Projucer.exe --resave`. `Tests/PitchShifterTests/` is a second console app in its own folder (so the two projects don't share `JuceLibraryCode/`). It compiles PitchShifter, PitchDetector and TuningUtils, runs sines through the shifter in 512-sample blocks, and checks the output pitch (measured with PitchDetector) and RMS level. Run it with `powershell -ExecutionPolicy Bypass -File Tests/PitchShifterTests/run_tests.ps1`. `Tests/BenchmarkRunner.cpp` is still empty, and `Tests/test_signals/` has no files yet.
+`Tests/PitchDetectorTests.jucer` is a separate Projucer console app (modules: core, audio_basics, audio_formats, dsp) that compiles `Tests/PitchDetectorTests.cpp` with `Source/DSP/PitchDetector.cpp`. It feeds sine waves in and checks `getFrequency()` to within one FFT bin. There's no test framework, just a plain `main` that returns non-zero on failure. Build and run it with `powershell -ExecutionPolicy Bypass -File Tests/run_tests.ps1`. If you add source files to it, update that `.jucer` and run `Projucer.exe --resave`. `Tests/PitchShifterTests/` is a second console app in its own folder (so the two projects don't share `JuceLibraryCode/`). It compiles PitchShifter, PitchDetector and TuningUtils, runs sines through the shifter in 512-sample blocks, and checks the output pitch (measured with PitchDetector) and RMS level. It also runs a synthetic 12-harmonic sax tone and checks the fraction of output energy on the expected harmonics. Run it with `powershell -ExecutionPolicy Bypass -File Tests/PitchShifterTests/run_tests.ps1`. `Tests/BenchmarkRunner.cpp` is a pitch-detection benchmark (every concert note from bari low A C2 to soprano high F# E6, as sine / synthetic sax tone / sax + noise; cents error, octave errors, per-instrument hit rate, CPU cost). Its Projucer project is `Tests/Benchmark/Benchmark.jucer`. Run it in Release with `powershell -ExecutionPolicy Bypass -File Tests/Benchmark/run_benchmark.ps1`. It always exits 0 and isn't registered with ctest. `Tests/test_signals/` has no files yet.
 
 ## Architecture
 
@@ -47,9 +47,9 @@ Signal flow (audio thread):
 MainComponent (juce::AudioAppComponent, 1 in (mono mic) / 2 out)
   │   input meter -> engine -> master gain -> output meter -> copy ch0 to all outputs
   └─ HarmonizerEngine            all DSP, no GUI; prepare/process/release mirror the audio callbacks
-       ├─ PitchDetector          estimates input f0: harmonic product spectrum (4 harmonics, 60-1600 Hz, candidates gated
-                                 to real peaks within 20 dB of the max) + parabolic interpolation, on a non-overlapping,
-                                 unwindowed fftSize block (own fifo, no RingBuffer)
+       ├─ PitchDetector          estimates input f0: loudest FFT bin + log-parabolic interpolation, on a non-overlapping,
+                                 unwindowed fftSize block (own fifo, no RingBuffer). HPS constants are still declared in
+                                 detectPitch() but unused, so it locks onto the loudest harmonic (octave errors on low notes)
        ├─ NoteController         RELATIVE mode: lock-free bitmask of GUI-selected keys C4..C6 (max 4 voices); each key
        │                         is an interval from unisonNote C5 (E5 = +4), so getSemitoneShiftFor(voice) is a fixed
        │                         interval and does not use PitchDetector. Voice i = i-th selected key, ascending.

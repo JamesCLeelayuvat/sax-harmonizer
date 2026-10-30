@@ -68,7 +68,7 @@ option(SAX_BUILD_TESTS "Build the DSP test executables" ON)
 if(SAX_BUILD_TESTS)
     enable_testing()
 
-    function(sax_add_test_app name)
+    function(sax_add_console_app name)
         juce_add_console_app(${name} PRODUCT_NAME "${name}")
         juce_generate_juce_header(${name})
         target_sources(${name} PRIVATE ${ARGN})
@@ -83,6 +83,10 @@ if(SAX_BUILD_TESTS)
             PUBLIC
                 juce::juce_recommended_config_flags
                 juce::juce_recommended_warning_flags)
+    endfunction()
+
+    function(sax_add_test_app name)
+        sax_add_console_app(${name} ${ARGN})
         add_test(NAME ${name} COMMAND ${name})
     endfunction()
 
@@ -95,4 +99,9 @@ if(SAX_BUILD_TESTS)
         Source/DSP/PitchShifter.cpp
         Source/DSP/PitchDetector.cpp
         Source/Utils/TuningUtils.cpp)
+
+    # Benchmark, not a test: always exits 0, so it isn't registered with ctest
+    sax_add_console_app(Benchmark
+        Tests/BenchmarkRunner.cpp
+        Source/DSP/PitchDetector.cpp)
 endif()

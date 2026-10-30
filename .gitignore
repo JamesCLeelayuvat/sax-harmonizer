@@ -4,6 +4,8 @@ Builds/**/Win32/
 Builds/**/.vs/
 Tests/Builds/**/x64/
 Tests/Builds/**/.vs/
+Tests/Benchmark/Builds/**/x64/
+Tests/Benchmark/Builds/**/.vs/
 .vs/
 
 # Visual Studio user files

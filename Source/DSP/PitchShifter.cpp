@@ -10,6 +10,7 @@ void PitchShifter::prepare(double sampleRate, int numChannels)
     std::fill(fftDataOut.begin(), fftDataOut.end(), 0);
     std::fill(outputPhase.begin(), outputPhase.end(), 0);
     std::fill(outputMag.begin(), outputMag.end(), 0);
+    std::fill(binOwnerMag.begin(), binOwnerMag.end(), 0);
     hannWindow = generateHannWindow(fftSize);
 }
 
@@ -38,6 +39,7 @@ void PitchShifter::process(const juce::AudioBuffer<float> &input, juce::AudioBuf
             std::fill(outputMag.begin(), outputMag.end(), 0);
             writeIndex = 0;
             std::fill(fftDataOut.begin(), fftDataOut.end(), 0); // zero the output
+            std::fill(binOwnerMag.begin(), binOwnerMag.end(), 0);
 
             // trigger an fft process
 
@@ -68,7 +70,6 @@ void PitchShifter::process(const juce::AudioBuffer<float> &input, juce::AudioBuf
                 deviation = deviation - 2 * juce::MathConstants<float>::pi * round(deviation / (2 * juce::MathConstants<float>::pi));
                 float realBin = k + deviation / (2 * juce::MathConstants<float>::pi * hopSize / fftSize);
                 realBinVector[k] = realBin;
-
             }
 
             peaks.clear();
@@ -108,10 +109,14 @@ void PitchShifter::process(const juce::AudioBuffer<float> &input, juce::AudioBuf
                     peaks[i + 1].startBin = minBin + 1;
                 }
             }
+            // Sort all peak regions
+            std::sort(peaks.begin(), peaks.end(), [this](const peakRegion &a, const peakRegion &b)
+                      { return inputMag[a.peakBin] > inputMag[b.peakBin]; });
 
             // LOOP4 Shifting all peak regions
             for (const auto &region : peaks)
             {
+
                 float newPeak = TuningUtils::getEqualTemperedRatio(semitones) * realBinVector[region.peakBin];
                 int newPeakBin = (int)std::round(newPeak);
                 int offset = newPeakBin - region.peakBin;
@@ -119,15 +124,21 @@ void PitchShifter::process(const juce::AudioBuffer<float> &input, juce::AudioBuf
                 if (newPeakBin > fftSize / 2 || newPeakBin < 0) // Check if shifted bins are in bounds
                     continue;
 
-                outputMag[newPeakBin] = inputMag[region.peakBin];
-                outputPhase[newPeakBin] += 2 * juce::MathConstants<float>::pi * newPeak * hopSize / fftSize;
-                outputPhase[newPeakBin] = std::remainder(outputPhase[newPeakBin], 2 * juce::MathConstants<float>::pi);
-                for (int i = region.startBin; i < region.endBin; i++)
+                if (inputMag[region.peakBin] > binOwnerMag[newPeakBin])
                 {
-                    if (i + offset <= fftSize / 2 && i + offset >= 0) // Check if shifted bins are in bounds
+                    outputMag[newPeakBin] = inputMag[region.peakBin];
+                    outputPhase[newPeakBin] += 2 * juce::MathConstants<float>::pi * newPeak * hopSize / fftSize;
+                    outputPhase[newPeakBin] = std::remainder(outputPhase[newPeakBin], 2 * juce::MathConstants<float>::pi);
+                    binOwnerMag[newPeakBin] = inputMag[region.peakBin];
+                   
+                    for (int i = region.startBin; i < region.endBin; i++)
                     {
-                        outputMag[i + offset] += inputMag[i];
-                        outputPhase[i + offset] = outputPhase[newPeakBin] + inputPhase[i] - inputPhase[region.peakBin];
+                        if (i + offset <= fftSize / 2 && i + offset >= 0 && inputMag[region.peakBin] > binOwnerMag[i + offset]) // Check if shifted bins are in bounds
+                        {
+                            outputMag[i + offset] = inputMag[i];
+                            outputPhase[i + offset] = outputPhase[newPeakBin] + inputPhase[i] - inputPhase[region.peakBin];
+                            binOwnerMag[i + offset] = inputMag[region.peakBin];
+                        }
                     }
                 }
             }

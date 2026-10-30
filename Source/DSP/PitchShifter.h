@@ -44,7 +44,7 @@ private:
     std::vector<float> inputMag = std::vector<float>(fftSize / 2 + 1);
     std::vector<float> inputPhase = std::vector<float>(fftSize / 2 + 1);
     std::vector<float> realBinVector = std::vector<float>(fftSize / 2 + 1);
-    std::vector<float> synthPhase = std::vector<float>(fftSize / 2 + 1);
+    std::vector<float> binOwnerMag = std::vector<float>(fftSize / 2 + 1);
 };
 static void multiplyWindow(std::vector<float> &fftData, const std::vector<float> &window)
 {
