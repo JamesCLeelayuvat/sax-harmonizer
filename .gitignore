@@ -6,6 +6,8 @@ Tests/Builds/**/x64/
 Tests/Builds/**/.vs/
 Tests/Benchmark/Builds/**/x64/
 Tests/Benchmark/Builds/**/.vs/
+Tests/SystemBenchmark/Builds/**/x64/
+Tests/SystemBenchmark/Builds/**/.vs/
 .vs/
 
 # Visual Studio user files

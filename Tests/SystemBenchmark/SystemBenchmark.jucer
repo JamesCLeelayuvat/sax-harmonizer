@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="Sb4Rn7" name="SystemBenchmark" projectType="consoleapp" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
+  <MAINGROUP id="Sb5Gr8" name="SystemBenchmark">
+    <GROUP id="{8C3F7A6B-1D9E-4F30-AB7C-6EAD2F8A4B15}" name="Tests">
+      <FILE id="Sbf1Br" name="SystemBenchmark.cpp" compile="1" resource="0" file="SystemBenchmark.cpp"/>
+    </GROUP>
+    <GROUP id="{9D4A8B7C-2EAF-4A41-BC8D-7FBE3A9B5C26}" name="DSP">
+      <FILE id="Sbf2En" name="HarmonizerEngine.cpp" compile="1" resource="0" file="../../Source/DSP/HarmonizerEngine.cpp"/>
+      <FILE id="Sbf3Pd" name="PitchDetector.cpp" compile="1" resource="0" file="../../Source/DSP/PitchDetector.cpp"/>
+      <FILE id="Sbf4Ps" name="PitchShifter.cpp" compile="1" resource="0" file="../../Source/DSP/PitchShifter.cpp"/>
+      <FILE id="Sbf5Rp" name="ReferencePitchShifter.cpp" compile="1" resource="0" file="../../Source/DSP/ReferencePitchShifter.cpp"/>
+      <FILE id="Sbf6Nc" name="NoteController.cpp" compile="1" resource="0" file="../../Source/Midi/NoteController.cpp"/>
+      <FILE id="Sbf7Tu" name="TuningUtils.cpp" compile="1" resource="0" file="../../Source/Utils/TuningUtils.cpp"/>
+    </GROUP>
+    <GROUP id="{AE5B9C8D-3FB0-4B52-CD9E-80CF4BAC6D37}" name="STK">
+      <FILE id="Sbs1St" name="Stk.cpp" compile="1" resource="0" file="../../ThirdParty/stk/src/Stk.cpp"/>
+      <FILE id="Sbs2Sx" name="Saxofony.cpp" compile="1" resource="0" file="../../ThirdParty/stk/src/Saxofony.cpp"/>
+      <FILE id="Sbs3Dl" name="DelayL.cpp" compile="1" resource="0" file="../../ThirdParty/stk/src/DelayL.cpp"/>
+      <FILE id="Sbs4Oz" name="OneZero.cpp" compile="1" resource="0" file="../../ThirdParty/stk/src/OneZero.cpp"/>
+      <FILE id="Sbs5En" name="Envelope.cpp" compile="1" resource="0" file="../../ThirdParty/stk/src/Envelope.cpp"/>
+      <FILE id="Sbs6No" name="Noise.cpp" compile="1" resource="0" file="../../ThirdParty/stk/src/Noise.cpp"/>
+      <FILE id="Sbs7Sw" name="SineWave.cpp" compile="1" resource="0" file="../../ThirdParty/stk/src/SineWave.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+  <EXPORTFORMATS>
+    <VS2026 targetFolder="Builds/VisualStudio2026">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="SystemBenchmark" headerPath="../../../../ThirdParty/stk/include"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="SystemBenchmark" headerPath="../../../../ThirdParty/stk/include"/>
+      </CONFIGURATIONS>
+    </VS2026>
+  </EXPORTFORMATS>
+</JUCERPROJECT>

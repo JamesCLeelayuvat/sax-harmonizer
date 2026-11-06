@@ -104,4 +104,22 @@ if(SAX_BUILD_TESTS)
     sax_add_console_app(Benchmark
         Tests/BenchmarkRunner.cpp
         Source/DSP/PitchDetector.cpp)
+
+    # Whole-application benchmark, also not a test (writes a CSV, plotted by plot_results.py)
+    sax_add_console_app(SystemBenchmark
+        Tests/SystemBenchmark/SystemBenchmark.cpp
+        Source/DSP/HarmonizerEngine.cpp
+        Source/DSP/PitchDetector.cpp
+        Source/DSP/PitchShifter.cpp
+        Source/DSP/ReferencePitchShifter.cpp
+        Source/Midi/NoteController.cpp
+        Source/Utils/TuningUtils.cpp
+        ThirdParty/stk/src/Stk.cpp
+        ThirdParty/stk/src/Saxofony.cpp
+        ThirdParty/stk/src/DelayL.cpp
+        ThirdParty/stk/src/OneZero.cpp
+        ThirdParty/stk/src/Envelope.cpp
+        ThirdParty/stk/src/Noise.cpp
+        ThirdParty/stk/src/SineWave.cpp)
+    target_include_directories(SystemBenchmark PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/stk/include")
 endif()

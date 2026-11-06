@@ -1,0 +1,29 @@
+We are going to benchmark the entire application.
+
+There will be tests on four different parts:
+
+Each test that requires a simulated sound will take from The Synthesis ToolKit in C++ (STK) by Perry R. Cook & Gary P. Scavone.
+
+1. The pitchshifter accuracy
+Pass a simulated pitch at a target frequency through the pitch shifter. On the output check both levels and pitch accuracy. Measure in dB and cents respectively. 
+For every note from bottom to top of tenor range till roughly high F#, perform all 24 shifts from -12 till +12. 
+Visualize as Dot plot: error in cents (y) against semitone shift (x), one color per shifter
+
+2. The pitch detection accuracy.
+Play a simulated pitch at a target frequency. Every note from the bottom of the tenor range till roughly high F#. Measure the error of the input frequency to 
+what which was output in cents. Visualize as Floating bars from min to max error for each note, in pitch order, with a dot for the mean and a zero line
+
+3. End-to-end latency
+Perform a set of 50 randomized shifts from randomized notes with one, two, three, and four voices activated. The input signal will be a small snippet of a 
+simulated tone. Measure latency from the time that the snippet is first input until the first sample comes out of the output. Measure in ms. Visualize
+Grouped bars of average and max as a percent of budget for each build and voice count, with a line at 100%
+
+4. Timbral quality of the pitchshifter.
+Perform FFT on input simulated tone and on output tone in their small windows. Find the interpolated peaks and measure how much they deviate in both frequency 
+and level. Perform these tests on a small selection of notes that span the full range of the saxophone with every shift. 
+Visualize as each note getting its own table. Each note shows all its shifts and the worst freq error, mean freq error, worst level error, mean level error,
+
+Have the test harness generate a CSV file, then which use matplotlib to visualize accordingly and export to pdf inside the working directory
+
+
+

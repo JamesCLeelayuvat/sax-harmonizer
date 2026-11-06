@@ -21,3 +21,7 @@ Usage:
 ```
 
 To update, re-download both repos into these folders, delete their `.git` directories, and update the table above.
+
+## STK (benchmark only)
+
+`stk/` is the subset of The Synthesis ToolKit in C++ (Perry R. Cook and Gary P. Scavone, MIT-style license in `stk/LICENSE`) that `stk::Saxofony` needs. It generates the input tones for `Tests/SystemBenchmark` and isn't compiled into the app. Source: https://github.com/thestk/stk, tag 5.0.1 (1cb2c81). Unmodified.
