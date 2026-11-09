@@ -41,7 +41,7 @@ private:
     static constexpr int fftOrder = DspConfig::fftOrder;
     static constexpr int fftSize = DspConfig::fftSize;
     static constexpr int numBins = fftSize / 2 + 1;
-    static constexpr int hopSize = fftSize / 4;
+    static constexpr int hopSize = DspConfig::hopSize;
     static constexpr int maxTrackingDistance = 3; // bins a peak may move between frames and still count as the same peak
 
     struct Peak

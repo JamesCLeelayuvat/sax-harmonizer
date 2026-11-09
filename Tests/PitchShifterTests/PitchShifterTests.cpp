@@ -56,6 +56,20 @@ namespace
         return output;
     }
 
+    // Pitch of the last frame of the signal, after the warmup
+    double detectPitch (const juce::AudioBuffer<float>& output)
+    {
+        PitchDetector detector;
+        detector.prepare (testSampleRate, 1);
+
+        const int steadyLength = totalSamples - warmupSamples;
+        juce::AudioBuffer<float> steady (1, steadyLength);
+        steady.copyFrom (0, 0, output, 0, warmupSamples, steadyLength);
+        detector.pushSamples (steady, steadyLength);
+
+        return detector.getFrequency();
+    }
+
     juce::AudioBuffer<float> makeSine (double frequency, float amplitude)
     {
         juce::AudioBuffer<float> buffer (1, totalSamples);
@@ -88,13 +102,7 @@ namespace
 
         const int steadyLength = totalSamples - warmupSamples;
 
-        PitchDetector detector;
-        detector.prepare (testSampleRate, 1);
-        juce::AudioBuffer<float> steady (1, steadyLength);
-        steady.copyFrom (0, 0, output, 0, warmupSamples, steadyLength);
-        detector.pushSamples (steady, steadyLength);
-
-        const double detected = detector.getFrequency();
+        const double detected = detectPitch (output);
         report (std::abs (detected - expected) <= pitchTolerance,
                 "pitch: expected %7.1f Hz   got %7.1f Hz", expected, detected);
 
@@ -168,13 +176,7 @@ namespace
 
         const int steadyLength = totalSamples - warmupSamples;
 
-        PitchDetector detector;
-        detector.prepare (testSampleRate, 1);
-        juce::AudioBuffer<float> steady (1, steadyLength);
-        steady.copyFrom (0, 0, output, 0, warmupSamples, steadyLength);
-        detector.pushSamples (steady, steadyLength);
-
-        const double detected = detector.getFrequency();
+        const double detected = detectPitch (output);
         report (std::abs (detected - expected) <= pitchTolerance,
                 "pitch: expected %7.1f Hz   got %7.1f Hz", expected, detected);
 

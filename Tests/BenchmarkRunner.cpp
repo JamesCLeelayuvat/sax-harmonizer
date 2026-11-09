@@ -84,12 +84,13 @@ namespace
         return buffer;
     }
 
-    // One fresh detector, one analysed frame. The detector runs its FFT on the
-    // sample *after* the fifo fills, hence fftSize + 1.
+    // One fresh detector. The estimate that counts is the last one, the first
+    // frame that's completely filled by the signal.
     double estimate (const juce::AudioBuffer<float>& signal)
     {
         PitchDetector detector;
         detector.prepare (sampleRate, 1);
+
         detector.pushSamples (signal, signal.getNumSamples());
         return detector.getFrequency();
     }
@@ -132,7 +133,7 @@ namespace
     {
         constexpr int numFrames = 2000;
         juce::Random random (1);
-        const auto signal = makeSignal (Signal::sax, 233.1, 0.0, numFrames * fftSize + 1, random);
+        const auto signal = makeSignal (Signal::sax, 233.1, 0.0, numFrames * DspConfig::hopSize + 1, random);
 
         PitchDetector detector;
         detector.prepare (sampleRate, 1);
@@ -151,10 +152,10 @@ namespace
         const double usPerBlock = 1.0e6 * seconds / (signal.getNumSamples() / blockSize);
         const double budgetUs = 1.0e6 * blockSize / sampleRate;
 
-        std::printf ("\nCPU cost (%d analysis frames, %d-sample blocks)\n", numFrames, blockSize);
+        std::printf ("\nCPU cost, including the detector's own FFTs (%d analysis frames, %d-sample blocks)\n", numFrames, blockSize);
         std::printf ("  %.1f us per analysis frame, %.2f us per block (budget %.0f us), %.0fx faster than real time\n",
                      usPerFrame, usPerBlock, budgetUs, audioSeconds / seconds);
-        std::printf ("  latency: one estimate per %d samples = %.1f ms\n", fftSize, 1000.0 * fftSize / sampleRate);
+        std::printf ("  latency: one estimate per %d samples = %.1f ms\n", DspConfig::hopSize, 1000.0 * DspConfig::hopSize / sampleRate);
         (void) detector.getFrequency();
     }
 }

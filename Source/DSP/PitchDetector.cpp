@@ -7,75 +7,111 @@ void PitchDetector::prepare(double sampleRate, int numChannels)
 
 void PitchDetector::reset()
 {
-    // TODO
+    frequency = 0;
+    cumulative = 0;
+    std::fill(fftData.begin(), fftData.end(), 0.0f);
+    std::fill(squareSum.begin(),squareSum.end(), 0.0f);
+    hopCounter = 0;
 }
 
 void PitchDetector::pushSamples(const juce::AudioBuffer<float> &input, int numSamples)
 {
-
-    auto inputBuffer = input.getReadPointer(0);
-    for (int i = 0; i < numSamples; i++)
+    auto in = input.getReadPointer(0);
+    for (int n = 0; n < numSamples; n++)
     {
-        pushNextSampleIntoFifo(inputBuffer[i]);
+        inputBuffer.push(in[n]);
+        if (++hopCounter == hopSize)
+        {
+            hopCounter = 0;
+            processFrame();
+        }
     }
-    // TODO
+}
+
+void PitchDetector::processFrame()
+{
+    // The last fftSize samples, unwindowed, then the forward FFT
+    inputBuffer.readAll(frame);
+    std::copy(frame.begin(), frame.end(), fftData.begin());
+    std::fill(fftData.begin() + fftSize, fftData.end(), 0.0f);
+    fft.performRealOnlyForwardTransform(fftData.data(), true);
+
+    float cumulativeSquare = 0;
+    for (int i = 0; i < fftSize; i++)
+    { // computing the square sum
+        cumulativeSquare += frame[i] * frame[i];
+        squareSum[i] = cumulativeSquare;
+    }
+
+    for (int i = 0; i < fftSize * 2; i++) // Wiener-Khinchin Theorem
+    {
+        // calculate magnitude
+        fftData[i * 2] = fftData[i * 2] * fftData[i * 2] + fftData[i * 2 + 1] * fftData[i * 2 + 1];
+        fftData[i * 2 + 1] = 0.0f;
+    }
+
+    fft.performRealOnlyInverseTransform(fftData.data());
+
+    detectPitch();
 }
 
 float PitchDetector::getFrequency() const
 {
+
+    if (frequency > 20000 || frequency < 20)
+    {
+        return 0;
+    }
     // TODO
     return frequency;
 }
 
-void PitchDetector::pushNextSampleIntoFifo(float sample)
-{
-    // if the fifo contains enough data, set a flag to say
-    // that the next line should now be rendered..
-    if (fifoIndex == fftSize) // [8]
-    {
-        std::fill(fftData.begin(), fftData.end(), 0.0f);
-        std::copy(fifo.begin(), fifo.end(), fftData.begin());
-        forwardFFT.performFrequencyOnlyForwardTransform(fftData.data());
-        detectPitch();
-        fifoIndex = 0;
-    }
-    fifo[(size_t)fifoIndex++] = sample; // [9]
-}
-
 void PitchDetector::detectPitch()
 {
-    // Harmonic product spectrum: the loudest bin is often the 2nd harmonic on a sax,
-    // so score each candidate f0 by the product of its first numHarmonics harmonics
-    // (a sum of logs here). Only the true fundamental lines up with all of them.
-    constexpr int numHarmonics = 4;            // 3 still loses to the octave when the fundamental is ~16 dB down
-    constexpr float minFrequency = 60.0f;      // just below a bari's low A (55 Hz is out of reach of the bin size anyway)
-    constexpr float maxFrequency = 1600.0f;    // above the soprano's altissimo
-    constexpr float candidateThreshold = 0.1f; // a candidate must be within 20 dB of the loudest bin
+    cumulative = 0;
+    dip = 0;
 
-    const float binWidth = (float)currSampleRate / fftSize;
-    const int minBin = std::max(2, (int)std::ceil(minFrequency / binWidth));
-    const int maxBin = std::min((int)(maxFrequency / binWidth), fftSize / 2 / numHarmonics - 1);
-
-    float maxAmp = 0.0f;
-    int maxIndex = 0;
-    for (int i = 1; i < fftSize / 2; i++)
+    for (std::size_t i = 1; i < fftSize / 2; i++) // evaluating the cumulative mean
     {
-        if (fftData[i] > fftData[maxIndex])
+
+        fftData[i] = squareSum[fftSize - 1 - i] + squareSum[fftSize - 1] - squareSum[i - 1] - 2 * fftData[i];
+        cumulative += fftData[i];
+        if (cumulative > 0)
         {
-            maxIndex = i;
-            maxAmp = fftData[i];
+            fftData[i] = fftData[i] * i / cumulative;
         }
     }
-    frequency = (maxIndex) * (float)currSampleRate / fftSize;
+    fftData[0] = 1;
 
-    if (maxIndex != 0 && maxIndex != fftSize / 2 - 1)
+    for (std::size_t i = 1; i < (fftSize / 2) - 1; i++)
     {
-        float lower = std::log(fftData[maxIndex - 1] + 1e-12f);
-        float mid = std::log(fftData[maxIndex]);
-        float higher = std::log(fftData[maxIndex + 1] + 1e-12f);
+        if (fftData[i] < threshold && fftData[i] < fftData[i + 1])
+        {
+            dip = i;
+            break;
+        }
+    }
+    int minIndex = 0;
+    if (dip == 0)
+    {
+        for (int i = 1; i < (fftSize / 2) - 1; i++)
+        {
+            if (fftData[i] < fftData[minIndex] && fftData[i] < fftData[i - 1] && fftData[i] < fftData[i + 1])
+            {
+                minIndex = i;
+            }
+        }
 
-        float offset = (lower - higher) / (2 * (lower - 2 * mid + higher));
-        frequency = (maxIndex + offset) * (float)currSampleRate / fftSize;
+        dip = minIndex;
+    }
+
+    if (dip == 0)
+    {
+        frequency = 0;
+    }
+    else
+    {
+        float estimate = dip + (fftData[dip - 1] - fftData[dip + 1]) / (2 * (fftData[dip - 1] - 2 * fftData[dip] + fftData[dip + 1]));
+        frequency = currSampleRate / estimate;
     }
 }
-

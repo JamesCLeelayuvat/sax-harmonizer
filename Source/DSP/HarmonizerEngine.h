@@ -21,6 +21,10 @@
     The GUI talks to the engine only through getNoteController() (which
     harmony notes are selected) and getParameters() (gains in, detected
     pitch out). Both are lock-free, so they're safe to read in process().
+
+    The detector and each voice do their own FFTs (the detector's frame is
+    unwindowed, the shifters' are Hann-windowed), so the engine only routes
+    audio. Latency: fftSize samples (the shifters').
 */
 class HarmonizerEngine
 {
@@ -39,8 +43,6 @@ private:
     // ISOLATION TEST: routed through ReferencePitchShifter. Switch back to PitchShifter to compare.
     std::vector<ReferencePitchShifter> voices = std::vector<ReferencePitchShifter>(DspConfig::maxVoices);
     juce::AudioBuffer<float> input;
-    juce::AudioBuffer<float> output;
-    juce::AudioBuffer<float> outputCombined;
-
-    float frequency;
+    juce::AudioBuffer<float> voiceOutput;    // one voice's output for this block
+    juce::AudioBuffer<float> outputCombined; // all the voices summed
 };

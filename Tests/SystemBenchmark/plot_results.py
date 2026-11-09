@@ -1,6 +1,7 @@
 """Turns the CSV written by SystemBenchmark into a multi-page PDF.
 
 Usage: python plot_results.py [--csv benchmark_results.csv] [--pdf benchmark_results.pdf] [--budget-ms 30]
+                              [--tests all|detector] [--label "text stamped on every page"]
 Both paths default to the current working directory.
 """
 import argparse
@@ -55,7 +56,12 @@ def number(row, key):
     return float(row[key]) if row[key] != "" else math.nan
 
 
+PAGE_LABEL = ""  # set from --label, stamped in the top-right corner of every page
+
+
 def page_title(fig, title, subtitle):
+    if PAGE_LABEL:
+        fig.text(0.97, 0.975, PAGE_LABEL, fontsize=9.5, color=INK_SECONDARY, ha="right", va="top")
     fig.text(0.06, 0.945, title, fontsize=15, fontweight="bold", va="bottom")
     fig.text(0.06, 0.935, subtitle, fontsize=9.5, color=INK_SECONDARY, va="top", linespacing=1.45)
 
@@ -107,7 +113,11 @@ def plot_detector(pdf, rows, timbre_rows):
     mean = np.array([np.mean(by_note[n]) for n in notes])
     count = sum(len(v) for v in by_note.values())
     gross = sum(abs(x) > 50.0 for v in by_note.values() for x in v)
-    gap_low, gap_high = fundamental_gap_range(timbre_rows)
+    unvoiced = len(rows) - count  # estimates where the detector returned 0 Hz (no pitch found)
+    gap_note = ""
+    if timbre_rows:
+        gap_low, gap_high = fundamental_gap_range(timbre_rows)
+        gap_note = f"This tone's fundamental is {gap_low:.0f} to {gap_high:.0f} dB below its strongest harmonic (5 sampled notes). "
 
     fig, ax = plt.subplots(figsize=PAGE_SIZE)
     fig.subplots_adjust(left=0.08, right=0.92, top=0.82, bottom=0.09)
@@ -131,9 +141,9 @@ def plot_detector(pdf, rows, timbre_rows):
     ax.legend(loc="upper left", ncols=2)
     page_title(fig, "Test 2: Pitch detection accuracy",
                f"PitchDetector on STK Saxofony tones. {count} estimates over {len(notes)} notes (8 trials per note); "
-               f"{gross} are more than 50 cents off.\n"
-               f"Dashed lines mark where each harmonic falls. This tone's fundamental is {gap_low:.0f} to {gap_high:.0f} dB below its strongest harmonic "
-               "(5 sampled notes)\nand the detector reports the loudest peak. The output shifts do not depend on this detector (relative mode).")
+               f"{gross} are more than 50 cents off; {unvoiced} more returned no pitch (not plotted).\n"
+               f"Dashed lines mark where each harmonic falls. {gap_note}\n"
+               "The output shifts do not depend on this detector (relative mode).")
     pdf.savefig(fig)
     plt.close(fig)
 
@@ -249,7 +259,12 @@ def main():
     parser.add_argument("--csv", default="benchmark_results.csv")
     parser.add_argument("--pdf", default="benchmark_results.pdf")
     parser.add_argument("--budget-ms", type=float, default=30.0, help="latency budget that 100%% on the latency chart means")
+    parser.add_argument("--tests", default="all", choices=["all", "detector"], help="which pages to draw")
+    parser.add_argument("--label", default="", help="text stamped on every page, e.g. algorithm and date")
     args = parser.parse_args()
+
+    global PAGE_LABEL
+    PAGE_LABEL = args.label
 
     with open(args.csv, newline="") as file:
         all_rows = list(csv.DictReader(file))
@@ -259,6 +274,10 @@ def main():
         by_test[row["test"]].append(row)
 
     with PdfPages(args.pdf) as pdf:
+        if args.tests == "detector":
+            plot_detector(pdf, by_test["detector"], by_test["timbre"])
+            print(f"Wrote {args.pdf}")
+            return
         plot_shifter_dots(pdf, by_test["shifter_pitch"], "pitch_error_cents", "Pitch error (cents)",
                           "Test 1: Pitch shifter accuracy, pitch",
                           "Every tenor note (Ab2 to E5, written low Bb to high F#) through all 24 shifts, one dot per note. STK Saxofony input tuned to each target.")

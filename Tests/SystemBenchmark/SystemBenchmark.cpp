@@ -740,9 +740,11 @@ int main (int argc, char* argv[])
     if (tests == "all" || tests == "latency")
         testLatency (csv);
 
+    if (tests == "all" || tests == "detector")
+        testDetector (csv);
+
     if (tests == "all")
     {
-        testDetector (csv);
         testShifterPitch<PitchShifter> ("PitchShifter", csv);
         testShifterPitch<ReferencePitchShifter> ("ReferencePitchShifter", csv);
         testTimbre<PitchShifter> ("PitchShifter", csv);
